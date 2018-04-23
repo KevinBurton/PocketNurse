@@ -1,0 +1,11 @@
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\bin\Debug\netcoreapp2.0\PocketNurse.deps.json
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\bin\Debug\netcoreapp2.0\PocketNurse.runtimeconfig.json
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\bin\Debug\netcoreapp2.0\PocketNurse.runtimeconfig.dev.json
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\bin\Debug\netcoreapp2.0\PocketNurse.dll
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\bin\Debug\netcoreapp2.0\PocketNurse.pdb
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\obj\Debug\netcoreapp2.0\PocketNurse.csproj.CoreCompileInputs.cache
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\obj\Debug\netcoreapp2.0\UserSecretsAssemblyInfo.cs
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\obj\Debug\netcoreapp2.0\PocketNurse.AssemblyInfoInputs.cache
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\obj\Debug\netcoreapp2.0\PocketNurse.AssemblyInfo.cs
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\obj\Debug\netcoreapp2.0\PocketNurse.dll
+C:\Users\Kevin\Projects\PocketNurse\PocketNurse\obj\Debug\netcoreapp2.0\PocketNurse.pdb

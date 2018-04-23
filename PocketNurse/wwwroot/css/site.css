@@ -1,0 +1,379 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+/* Omnicell */
+.intro h1 {
+    font-size: 42px;
+    font-weight: 300;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+}
+.container {
+    max-width: 990px;
+    margin: 0 auto;
+    padding: 0;
+}
+.intro p {
+    font-size: 20px;
+    font-weight: 300;
+}
+p {
+    margin: 0 0 17px;
+}
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+}
+.interactive-area {
+    position: relative;
+    padding: 100px 0 200px 0;
+}
+.absolute-wrapper {
+    height: 435px;
+    width: 300px;
+    margin: 0 auto;
+    position: relative;
+}
+.line, .line-2, .highlight, .highlight-2, .pop-up {
+}
+.highlight {
+    border: 2px dashed #69BE28;
+    width: 50px;
+    height: 50px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+    visibility: hidden;
+    background-color: rgba(105, 189, 40, 0.3);
+}
+
+.interactive-area .active > .highlight, .interactive-area .active > .highlight-2 {
+    visibility: visible;
+}
+.highlight-2 {
+    border: 2px dashed #69BE28;
+    width: 50px;
+    height: 50px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+    visibility: hidden;
+    background-color: rgba(105, 189, 40, 0.3);
+    margin-top: -35px;
+    margin-left: 185px;
+}
+.base-img {
+    display: none;
+    margin: 0 auto;
+    width: 300px;
+    position: relative;
+    top: -15px;
+    opacity: 0;
+    transition: 500ms linear;
+}
+.base-img.active {
+    display: block;
+    opacity: 1;
+}
+.second-img {
+    display: none;
+    width: 400px;
+    position: absolute;
+    left: -46px;
+    top: -77px;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    -webkit-transition: 500ms linear;
+    transition: 500ms linear;
+}
+.second-img.active {
+    display: block;
+    opacity: 1;
+}
+.third-img {
+    display: none;
+    width: 400px;
+    position: absolute;
+    margin: auto;
+    left: -57px;
+    top: -43px;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: 500ms linear;
+}
+.third-img.active {
+    display: block;
+    opacity: 1;
+}
+.prev {
+    position: absolute;
+    left: 3%;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 50px;
+    cursor: pointer;
+}
+.next {
+    position: absolute;
+    right: 3%;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 50px;
+    cursor: pointer;
+}
+.interactive-area .item-1 {
+    position: absolute;
+    top: 21%;
+    left: 12%;
+    z-index: 10;
+}
+.interactive-area .item-1 .line {
+    position: absolute;
+    height: 2px;
+    border-top: 2px solid #69BE28;
+    width: 134px;
+    margin-left: -104px;
+    margin-top: -42px;
+    -ms-transform: rotate(49deg);
+    -webkit-transform: rotate(49deg);
+    transform: rotate(49deg);
+    visibility: hidden;
+}
+.interactive-area .item-1.active {
+    visibility: visible;
+}
+.interactive-area .item-1 .pop-up {
+    position: absolute;
+    top: -210px;
+    left: -135px;
+    z-index: 10;
+    padding: 10px;
+}
+.interactive-area .item-1 .pop-up-content {
+    float: left;
+    width: 275px;
+    padding: 10px 10px 0px 10px;
+}
+.interactive-area .item-1 .pop-up-content p {
+    margin: 0;
+    font-size: 15px;
+    color: #69BE28;
+    font-weight: bold;
+}
+.interactive-area .item-2 {
+    position: absolute;
+    top: 42%;
+    right: 12%;
+    z-index: 10;
+}
+.interactive-area .item-2.active {
+    visibility: visible;
+}
+.interactive-area .item-2 .line {
+     position: absolute;
+     height: 2px;
+     border-top: 2px solid #69BE28;
+     width: 220px;
+     margin-left: -36px;
+     margin-top: -97px;
+     -ms-transform: rotate(-70deg);
+     -webkit-transform: rotate(-70deg);
+     transform: rotate(-70deg);
+     visibility: hidden;
+}
+.interactive-area .item-2 .pop-up {
+    position: absolute;
+    top: -297px;
+    left: 65px;
+    z-index: 10;
+    padding: 10px;
+}
+.interactive-area .item-2 .pop-up-content p {
+    margin: 0;
+    font-size: 15px;
+    color: #69BE28;
+    font-weight: bold;
+}
+.interactive-area .item-3 {
+    position: absolute;
+    top: 83%;
+    left: 66%;
+    z-index: 10;
+}
+.interactive-area .item-3.active {
+     top: 78%;
+     visibility: visible;
+}
+.interactive-area .item-3 .line {
+    position: absolute;
+    height: 2px;
+    border-top: 2px solid #69BE28;
+    width: 175px;
+    margin-left: 26px;
+    margin-top: -42px;
+    -ms-transform: rotate(-39deg);
+    -webkit-transform: rotate(-39deg);
+    transform: rotate(-39deg);
+    visibility: hidden;
+}
+.interactive-area .item-3 .pop-up {
+    position: absolute;
+    top: -220px;
+    left: 180px;
+    z-index: 10;
+    padding: 10px;
+}
+.interactive-area .item-3 .pop-up-content p {
+    margin: 0;
+    font-size: 15px;
+    color: #69BE28;
+    font-weight: bold;
+}
+.interactive-area .item-4 {
+    position: absolute;
+    top: 104%;
+    left: 22%;
+    z-index: 10;
+}
+.interactive-area .item-4 .pop-up {
+    position: absolute;
+    top: -50px;
+    left: -170px;
+    z-index: 10;
+    padding: 10px;
+}
+.interactive-area .item-4 .pop-up-content {
+    float: left;
+    width: 275px;
+    padding: 8px 25px 0px 25px;
+}
+.interactive-area .item-4 .pop-up-content p {
+    margin: 0;
+    font-size: 15px;
+    color: #69BE28;
+    font-weight: bold;
+}
+.interactive-area .item-5 {
+    position: absolute;
+    top: 79%;
+    left: 14%;
+    z-index: 10;
+}
+.interactive-area .item-5.active .line {
+    position: absolute;
+    height: 2px;
+    border-top: 2px solid #69BE28;
+    width: 210px;
+    margin-left: -178px;
+    margin-top: -61px;
+    -ms-transform: rotate(41deg);
+    -webkit-transform: rotate(41deg);
+    transform: rotate(41deg);
+    visibility: hidden;
+}
+.interactive-area .item-5 .pop-up {
+    position: absolute;
+    top: -224px;
+    left: -255px;
+    z-index: 10;
+    padding: 10px;
+}
+.interactive-area .item-5 .pop-up-content {
+    float: left;
+    width: 275px;
+    padding: 8px 25px 0px 25px;
+}
+.interactive-area .item-5 .pop-up-content p {
+    margin: 0;
+    font-size: 15px;
+    color: #69BE28;
+    font-weight: bold;
+}
+.interactive-area .item-6 {
+    position: absolute;
+    top: 38%;
+    left: 14%;
+    z-index: 10;
+}
+.interactive-area .item-6 .line {
+    position: absolute;
+    height: 2px;
+    border-top: 2px solid #69BE28;
+    width: 300px;
+    margin-left: -11px;
+    margin-top: 155px;
+    -ms-transform: rotate(47deg);
+    -webkit-transform: rotate(47deg);
+    transform: rotate(47deg);
+    visibility: hidden;
+}
+.interactive-area .item-6 .line-2 {
+    position: absolute;
+    height: 2px;
+    border-top: 2px solid #69BE28;
+    width: 200px;
+    margin-left: 145px;
+    margin-top: 158px;
+    -ms-transform: rotate(-106deg);
+    -webkit-transform: rotate(-106deg);
+    transform: rotate(-106deg);
+    visibility: hidden;
+}
+.interactive-area .item-6.active .pop-up {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    width: 400px;
+    box-shadow: 1px 1px 2px #ccc;
+    top: 237px;
+    left: 237px;
+}
+.interactive-area .item-6 .pop-up {
+    position: absolute;
+    top: 236px;
+    left: 237px;
+    z-index: 10;
+    padding: 10px;
+}
+.interactive-area .item-6 .pop-up-content p {
+    margin: 0;
+    font-size: 15px;
+    color: #69BE28;
+    font-weight: bold;
+}
+.interactive-area .item-6.active ~ .base-img {
+    display: none;
+}
+.interactive-area .item-6.active ~ .second-img {
+    visibility: visible;
+    display: block;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
