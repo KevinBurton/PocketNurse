@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  pocketnurse:
+    image: pocketnurse
+    build:
+      context: .
+      dockerfile: PocketNurse/Dockerfile
