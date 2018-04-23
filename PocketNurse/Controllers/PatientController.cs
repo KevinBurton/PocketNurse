@@ -9,11 +9,11 @@ using PocketNurse.Models;
 
 namespace PocketNurse.Controllers
 {
-    public class PatientsController : Controller
+    public class PatientController : Controller
     {
         private readonly PocketNurseContext _context;
 
-        public PatientsController(PocketNurseContext context)
+        public PatientController(PocketNurseContext context)
         {
             _context = context;
         }

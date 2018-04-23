@@ -38,6 +38,7 @@ namespace PocketNurse.Models
                          FullName = "Leia Organa",
                          DOB = DateTime.Parse("4019-1-1")
                      });
+                context.SaveChanges();
             }
         }
     }
