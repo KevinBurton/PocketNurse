@@ -25,6 +25,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.DOB)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Allergies)
+                </th>
             <th></th>
         </tr>
     </thead>
@@ -42,6 +45,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DOB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Allergies)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.PatientId">Edit</a> |
