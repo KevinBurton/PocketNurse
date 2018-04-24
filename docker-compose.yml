@@ -12,7 +12,7 @@ services:
       ACCEPT_EULA: "Y"
       MSSQL_PID: Developer
   pocketnurse:
-    build: PocketNurse/Dockerfile
+    build: PocketNurse
     image: pocketnurse
     depends_on:
       - mssql
