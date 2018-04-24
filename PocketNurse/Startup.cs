@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PocketNurse.Data;
 using PocketNurse.Models;
 using PocketNurse.Services;
+using PocketNurse.Repository;
 
 namespace PocketNurse
 {
@@ -69,6 +70,9 @@ namespace PocketNurse
                 options.SlidingExpiration = true;
             });
 
+            // Add repositories
+            services.AddScoped<IPatientRepository, PatientRepository>();
+            
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 

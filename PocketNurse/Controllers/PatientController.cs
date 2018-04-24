@@ -6,39 +6,33 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PocketNurse.Models;
+using PocketNurse.Repository;
 
 namespace PocketNurse.Controllers
 {
     public class PatientController : Controller
     {
-        private readonly PocketNurseContext _context;
+        private readonly IPatientRepository _repository;
 
-        public PatientController(PocketNurseContext context)
+        public PatientController(IPatientRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Patients
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Patient.ToListAsync());
+            return View(_repository.GetAll().ToList());
         }
 
-        // GET: Patients/Details/5
-        public async Task<IActionResult> Details(string id)
+        // GET: Patients/Details/<key>
+        public IActionResult Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var patient = await _context.Patient
-                .SingleOrDefaultAsync(m => m.PatientId == id);
+            var patient = _repository.Find(id);
             if (patient == null)
             {
                 return NotFound();
             }
-
             return View(patient);
         }
 
@@ -53,26 +47,21 @@ namespace PocketNurse.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MRN,PatientId,First,Last,DOB,Allergies")] Patient patient)
+        public IActionResult Create([Bind("MRN,First,Last,DOB")] Patient patient)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(patient);
-                await _context.SaveChangesAsync();
+                _repository.Add(patient);
+                _repository.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(patient);
         }
 
         // GET: Patients/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public IActionResult Edit(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var patient = await _context.Patient.SingleOrDefaultAsync(m => m.PatientId == id);
+            var patient = _repository.Find(id);
             if (patient == null)
             {
                 return NotFound();
@@ -85,7 +74,7 @@ namespace PocketNurse.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MRN,PatientId,First,Last,DOB,Allergies")] Patient patient)
+        public IActionResult Edit(string id, [Bind("MRN,First,Last,DOB,")] Patient patient)
         {
             if (id != patient.PatientId)
             {
@@ -96,8 +85,8 @@ namespace PocketNurse.Controllers
             {
                 try
                 {
-                    _context.Update(patient);
-                    await _context.SaveChangesAsync();
+                    _repository.Update(patient);
+                    _repository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -116,15 +105,9 @@ namespace PocketNurse.Controllers
         }
 
         // GET: Patients/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public IActionResult Delete(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var patient = await _context.Patient
-                .SingleOrDefaultAsync(m => m.PatientId == id);
+            var patient = _repository.Find(id);
             if (patient == null)
             {
                 return NotFound();
@@ -136,17 +119,17 @@ namespace PocketNurse.Controllers
         // POST: Patients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public IActionResult DeleteConfirmed(string id)
         {
-            var patient = await _context.Patient.SingleOrDefaultAsync(m => m.PatientId == id);
-            _context.Patient.Remove(patient);
-            await _context.SaveChangesAsync();
+            var patient = _repository.Find(id);
+            _repository.Delete(patient);
+            _repository.Save();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PatientExists(string id)
         {
-            return _context.Patient.Any(e => e.PatientId == id);
+            return _repository.Any(e => e.PatientId == id);
         }
     }
 }
