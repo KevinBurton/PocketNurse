@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PocketNurse.Models;
+﻿using PocketNurse.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PocketNurse.Repository
 {
@@ -20,7 +18,6 @@ namespace PocketNurse.Repository
         {
             return Context.Patient;
         }
-
         public void Add(Patient entity)
         {
             Context.Patient.Add(entity);
@@ -33,18 +30,15 @@ namespace PocketNurse.Repository
         {
             Context.Patient.Remove(entity);
         }
-
         public void DeleteAll(IEnumerable<Patient> entity)
         {
             Context.Patient.RemoveRange(entity);
         }
-
         public void Update(Patient entity)
         {
             var entry = Context.Patient.Where(s => s.PatientId == entity.PatientId);
             Context.Patient.Attach(entity);
         }
-
         public bool Any(Func<Patient, bool> predicate = null)
         {
             if(predicate == null)
@@ -52,7 +46,6 @@ namespace PocketNurse.Repository
             else
                 return Context.Patient.Any(predicate);
         }
-
         public void Save()
         {
             Context.SaveChanges();
