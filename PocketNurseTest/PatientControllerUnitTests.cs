@@ -28,7 +28,7 @@ namespace PocketNurseTest
         }
         [TestMethod]
         [Owner("Kevin Burton")]
-        public void IndexTest()
+        public void PatientIndexTest()
         {
             var response = _controller.Index();
             Assert.IsNotNull(response);
