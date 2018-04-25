@@ -43,7 +43,7 @@ namespace PocketNurse.Controllers
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            ViewData["ReturnUrl"] = "/Patient";
+            ViewData["ReturnUrl"] = "/Import";
 
             return View();
         }
@@ -452,7 +452,7 @@ namespace PocketNurse.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(PatientController.Index), "Patient");
+                return RedirectToAction(nameof(ImportController.Index), "Import");
             }
         }
 
