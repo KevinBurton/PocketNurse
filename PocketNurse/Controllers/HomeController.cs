@@ -24,7 +24,7 @@ namespace PocketNurse.Controllers
         {
             if (_signInManager.IsSignedIn(User))
             {
-                return RedirectToAction(nameof(PatientController.Index), "Patient");
+                return RedirectToAction(nameof(PatientController.Index), "Import");
             }
             return View();
         }
