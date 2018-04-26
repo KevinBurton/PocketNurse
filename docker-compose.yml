@@ -14,6 +14,8 @@ services:
   pocketnurse:
     build: PocketNurse
     image: pocketnurse
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Docker"    
     depends_on:
       - mssql
     container_name: pocketnurse
