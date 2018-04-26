@@ -43,6 +43,8 @@ namespace PocketNurse.Controllers
         [HttpPost("Upload")]
         public IActionResult Upload(IFormFile file)
         {
+            if (file == null) return RedirectToAction("Index");
+
             long size = file.Length;
 
             if (file.Length > 0)
