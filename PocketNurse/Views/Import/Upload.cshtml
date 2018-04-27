@@ -1,0 +1,48 @@
+﻿@using System.Linq
+
+@model OmnicellCabinetViewModel
+
+@{
+    ViewData["Title"] = "Cabinet View";
+    Layout = "~/Views/Import/_Layout.cshtml";
+}
+
+<h2>Cabinet View</h2>
+
+<table style="margin-top: 50px;">
+    <tr>
+        <td></td>
+        <td><center><b>Patient First Name</b></center></td>
+        <td><center><b>Patient Last Name</b></center></td>
+        <td><center><b>DOB</b></center></td>
+        <td><center><b>MRN</b></center></td>
+        <td><center><b>Patient ID</b></center></td>
+        <td><center><b>Allergies</b></center></td>
+    </tr>
+    @{
+        foreach (var patient in @Model.Patients)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => patient.Patient.First)<br />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => patient.Patient.Last)<br />
+                </td>
+                <td>
+                    @patient.Patient.DOB.ToShortDateString()<br />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => patient.Patient.MRN)<br />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => patient.Patient.PatientId)<br />
+                </td>
+                <td>
+                    @string.Join(",", patient.Allergies.Select(a => a.AllergyName))<br />
+                </td>
+
+            </tr>
+        }
+    }
+</table>

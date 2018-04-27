@@ -38,7 +38,7 @@ namespace PocketNurseTest
                                                _patientAllergyRepository.Object,
                                                _medicationOrderRepository.Object,
                                                _notInFormularyRepository.Object);
-            var filePath = "../../../SampleRequest.xlsx";
+            var filePath = "../../../SampleRequest1.xlsx";
             var testFileStream = ReadTestData(filePath);
             var fileInfo = new FileInfo(filePath);
             _fileSize = fileInfo.Length;
@@ -56,10 +56,11 @@ namespace PocketNurseTest
         {
             var response = _controller.Upload(_file.Object);
             Assert.IsInstanceOfType(response, typeof(IActionResult));
-            Assert.IsInstanceOfType(response, typeof(OkObjectResult));
-            var valueResponse = (OkObjectResult)response;
-            Debug.WriteLine($"Size {valueResponse.Value.GetType().GetProperty("size").GetValue(valueResponse.Value, null)} Count {valueResponse.Value.GetType().GetProperty("wsCount").GetValue(valueResponse.Value, null)} Data {valueResponse.Value.GetType().GetProperty("patients").GetValue(valueResponse.Value, null)} {valueResponse.Value.GetType().GetProperty("notInFormulary").GetValue(valueResponse.Value, null)}");
-            Assert.IsTrue((long)valueResponse.Value.GetType().GetProperty("size").GetValue(valueResponse.Value, null) == _fileSize);
+            Assert.IsInstanceOfType(response, typeof(ViewResult));
+            Assert.IsInstanceOfType(((ViewResult)response).Model, typeof(OmnicellCabinetViewModel));
+            var modelResponse = ((ViewResult)response).Model as OmnicellCabinetViewModel;
+            Debug.WriteLine($"Patients {modelResponse.Patients.Count} NotInFormulary {modelResponse.NotInFormulary.Count}");
+            Assert.IsTrue(modelResponse.Patients.Count == 2);
         }
         private FileStream ReadTestData(string path)
         {

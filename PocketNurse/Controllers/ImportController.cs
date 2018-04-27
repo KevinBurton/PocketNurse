@@ -49,8 +49,7 @@ namespace PocketNurse.Controllers
 
                     var wsCount = pck.Workbook.Worksheets.Count();
 
-                    var patients = new List<PatientDescription>();
-                    var notInFormulary = new List<NotInFormulary>();
+                    var cabinet = new OmnicellCabinetViewModel();
 
                     // There should be three worksheets
                     if (pck.Workbook.Worksheets.Count != 3) return RedirectToAction("Index");
@@ -100,7 +99,7 @@ namespace PocketNurse.Controllers
                                     patientDescription.Allergies.Add(new Allergy() { AllergyId = Guid.Empty, AllergyName = allergy });
                                 }
                             }
-                            patients.Add(patientDescription);
+                            cabinet.Patients.Add(patientDescription);
                         }
                     }
                     if (pck.Workbook.Worksheets[2].Dimension.Rows < 1) return RedirectToAction("Index");
@@ -112,7 +111,7 @@ namespace PocketNurse.Controllers
                                  i++)
                         {
                             var patientId = Convert.ToString(pck.Workbook.Worksheets[2].Cells[i, 6].Value);
-                            var patientDescription = patients.First(p => p.Patient.PatientId == patientId);
+                            var patientDescription = cabinet.Patients.First(p => p.Patient.PatientId == patientId);
                             if(patientDescription != null)
                             {
                                 patientDescription.MedicationOrders.Add(new MedicationOrder()
@@ -136,7 +135,7 @@ namespace PocketNurse.Controllers
                                  i <= pck.Workbook.Worksheets[3].Dimension.End.Row;
                                  i++)
                         {
-                            notInFormulary.Add(new NotInFormulary()
+                            cabinet.NotInFormulary.Add(new NotInFormulary()
                             {
                                 _id = -1,
                                 GenericName = (string)pck.Workbook.Worksheets[3].Cells[i, 1].Value,
@@ -154,7 +153,7 @@ namespace PocketNurse.Controllers
                     // process uploaded files
                     // Don't rely on or trust the FileName property without validation.
 
-                    return Ok(new { size, wsCount, patients, notInFormulary });
+                    return View(cabinet);
                 }
             }
             return NotFound();
