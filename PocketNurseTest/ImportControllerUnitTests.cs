@@ -58,7 +58,7 @@ namespace PocketNurseTest
             Assert.IsInstanceOfType(response, typeof(IActionResult));
             Assert.IsInstanceOfType(response, typeof(OkObjectResult));
             var valueResponse = (OkObjectResult)response;
-            Debug.WriteLine($"Size {valueResponse.Value.GetType().GetProperty("size").GetValue(valueResponse.Value, null)} Count {valueResponse.Value.GetType().GetProperty("wsCount").GetValue(valueResponse.Value, null)} Worksheets {valueResponse.Value.GetType().GetProperty("worksheets").GetValue(valueResponse.Value, null)}");
+            Debug.WriteLine($"Size {valueResponse.Value.GetType().GetProperty("size").GetValue(valueResponse.Value, null)} Count {valueResponse.Value.GetType().GetProperty("wsCount").GetValue(valueResponse.Value, null)} Data {valueResponse.Value.GetType().GetProperty("patients").GetValue(valueResponse.Value, null)} {valueResponse.Value.GetType().GetProperty("notInFormulary").GetValue(valueResponse.Value, null)}");
             Assert.IsTrue((long)valueResponse.Value.GetType().GetProperty("size").GetValue(valueResponse.Value, null) == _fileSize);
         }
         private FileStream ReadTestData(string path)
