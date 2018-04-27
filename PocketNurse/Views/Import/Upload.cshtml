@@ -7,42 +7,82 @@
     Layout = "~/Views/Import/_Layout.cshtml";
 }
 
-<h2>Cabinet View</h2>
-
-<table style="margin-top: 50px;">
-    <tr>
-        <td></td>
-        <td><center><b>Patient First Name</b></center></td>
-        <td><center><b>Patient Last Name</b></center></td>
-        <td><center><b>DOB</b></center></td>
-        <td><center><b>MRN</b></center></td>
-        <td><center><b>Patient ID</b></center></td>
-        <td><center><b>Allergies</b></center></td>
-    </tr>
-    @{
-        foreach (var patient in @Model.Patients)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => patient.Patient.First)<br />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => patient.Patient.Last)<br />
-                </td>
-                <td>
-                    @patient.Patient.DOB.ToShortDateString()<br />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => patient.Patient.MRN)<br />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => patient.Patient.PatientId)<br />
-                </td>
-                <td>
-                    @string.Join(",", patient.Allergies.Select(a => a.AllergyName))<br />
-                </td>
-
-            </tr>
-        }
-    }
-</table>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="panel-title">Cabinet View</h2>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"><center><b>Patient First Name</b></center></th>
+                    <th scope="col"><center><b>Patient Last Name</b></center></th>
+                    <th scope="col"><center><b>DOB</b></center></th>
+                    <th scope="col"><center><b>MRN</b></center></th>
+                    <th scope="col"><center><b>Patient ID</b></center></th>
+                    <th scope="col"><center><b>Allergies</b></center></th>
+                </tr>
+                <tr colspan="6">
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var patient in @Model.Patients)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => patient.Patient.First)<br />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => patient.Patient.Last)<br />
+                            </td>
+                            <td>
+                                @patient.Patient.DOB.ToString("MM/dd")<br />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => patient.Patient.MRN)<br />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => patient.Patient.PatientId)<br />
+                            </td>
+                            <td>
+                                @string.Join(",", patient.Allergies.Select(a => a.AllergyName))<br />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <table class="table">
+                                    <tbody>
+                                        @{
+                                            foreach (var med in @patient.MedicationOrders)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => med.MedicationId)<br />
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => med.MedicationName)<br />
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => med.Dose)<br />
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => med.Frequency)<br />
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => med.Route)<br />
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
