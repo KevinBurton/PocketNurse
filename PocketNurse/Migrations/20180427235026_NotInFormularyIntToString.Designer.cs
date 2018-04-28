@@ -11,9 +11,10 @@ using System;
 namespace PocketNurse.Migrations
 {
     [DbContext(typeof(PocketNurseContext))]
-    partial class PocketNurseContextModelSnapshot : ModelSnapshot
+    [Migration("20180427235026_NotInFormularyIntToString")]
+    partial class NotInFormularyIntToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

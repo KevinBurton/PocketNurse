@@ -2,24 +2,30 @@
     ViewData["Title"] = "PocketNurse Import Page";
     Layout = "~/Views/Import/_Layout.cshtml";
 }
-<form id="upload" method="post" class="well form-horizontal" enctype="multipart/form-data" asp-controller="Import" asp-action="Upload">
-    <fieldset>
-        <!-- Form Name -->
-        <legend>Import file</legend>
-        <div class="form-group">
-            <label class="col-md-4 control-label">Upload file path</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
-                    <input placeholder="Path to Excel Spreadsheet" class="form-control" type="file" name="file" required />
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger" role="alert">
+        @Html.ValidationSummary()
+    </div>
+}
+    <form id="upload" method="post" class="well form-horizontal" enctype="multipart/form-data" asp-controller="Import" asp-action="Upload">
+        <fieldset>
+            <!-- Form Name -->
+            <legend>Import file</legend>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Upload file path</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
+                        <input placeholder="Path to Excel Spreadsheet" class="form-control" type="file" name="file" required />
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-4 control-label"></label>
-            <div class="col-md-10">
-                <button type="submit" class="btn btn-warning">Upload <span class="glyphicon glyphicon-upload"></span></button>
+            <div class="form-group">
+                <label class="col-md-4 control-label"></label>
+                <div class="col-md-10">
+                    <button type="submit" class="btn btn-warning">Upload <span class="glyphicon glyphicon-upload"></span></button>
+                </div>
             </div>
-        </div>
-    </fieldset>
-</form>
+        </fieldset>
+    </form>
