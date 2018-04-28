@@ -175,7 +175,7 @@ namespace PocketNurse.Controllers
                                 patientDescription.MedicationOrders.Add(new MedicationOrder()
                                 {
                                     MedicationId = Guid.Empty,
-                                    //PocketNurseItemId = (string)pck.Workbook.Worksheets[1].Cells[i, 1].Value,
+                                    PocketNurseItemId = (string)pck.Workbook.Worksheets[2].Cells[i, 1].Value,
                                     MedicationName = (string)pck.Workbook.Worksheets[2].Cells[i, 2].Value,
                                     Dose = Convert.ToString(pck.Workbook.Worksheets[2].Cells[i, 3].Value),
                                     Frequency = Convert.ToString(pck.Workbook.Worksheets[2].Cells[i, 4].Value),
