@@ -1,20 +1,20 @@
-FROM microsoft/aspnetcore:2.0-nanoserver-1709 AS base
+FROM microsoft/aspnetcore AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/aspnetcore-build:2.0-nanoserver-1709 AS build
+FROM microsoft/aspnetcore-build AS build
 WORKDIR /src
-COPY *.sln ./
-COPY PocketNurse/PocketNurse.csproj PocketNurse/
+COPY PocketNurse.csproj ./
 RUN dotnet restore
 COPY . .
-WORKDIR /src/PocketNurse
 RUN dotnet build -c Release -o /app
 
 FROM build AS publish
 RUN dotnet publish -c Release -o /app
 
 FROM base AS final
+ENV ASPNETCORE_ENVIRONMENT Docker
 WORKDIR /app
 COPY --from=publish /app .
+COPY appsettings.Docker.json appsettings.json
 ENTRYPOINT ["dotnet", "PocketNurse.dll"]
