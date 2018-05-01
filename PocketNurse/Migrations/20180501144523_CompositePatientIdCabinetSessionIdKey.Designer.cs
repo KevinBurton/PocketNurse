@@ -11,9 +11,10 @@ using System;
 namespace PocketNurse.Migrations
 {
     [DbContext(typeof(PocketNurseContext))]
-    partial class PocketNurseContextModelSnapshot : ModelSnapshot
+    [Migration("20180501144523_CompositePatientIdCabinetSessionIdKey")]
+    partial class CompositePatientIdCabinetSessionIdKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
