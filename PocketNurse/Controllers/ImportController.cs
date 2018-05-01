@@ -54,7 +54,7 @@ namespace PocketNurse.Controllers
 
                     var wsCount = pck.Workbook.Worksheets.Count();
 
-                    var cabinet = new OmnicellCabinetViewModel();
+                    var cabinet = new OmnicellCabinetViewModel(new CabinetSession());
 
                     // There should be three worksheets
                     if (pck.Workbook.Worksheets.Count < 3)

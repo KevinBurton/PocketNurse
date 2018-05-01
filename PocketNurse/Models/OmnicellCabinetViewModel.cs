@@ -4,8 +4,10 @@ namespace PocketNurse.Models
 {
     public class OmnicellCabinetViewModel
     {
-        public OmnicellCabinetViewModel()
+        public CabinetSession Session;
+        public OmnicellCabinetViewModel(CabinetSession session)
         {
+            Session = session;
             Patients = new List<PatientDescription>();
             NotInFormulary = new List<NotInFormulary>();
         }
