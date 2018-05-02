@@ -54,9 +54,9 @@ namespace PocketNurse.Controllers
 
                     var wsCount = pck.Workbook.Worksheets.Count();
 
-                    var cabinet = new OmnicellCabinetViewModel(new CabinetSession());
+                    OmnicellCabinetViewModel cabinetView = null;
 
-                    // There should be three worksheets
+                    // There should be four worksheets
                     if (wsCount < 4)
                     {
                         // Not enough worksheets
@@ -104,6 +104,9 @@ namespace PocketNurse.Controllers
                                 var cabinetSessionDate = DateTime.FromOADate(dateNum);
                                 var cabinetState = Convert.ToString(pck.Workbook.Worksheets[0].Cells[i, 3].Value);
                                 var cabinetArea = Convert.ToString(pck.Workbook.Worksheets[0].Cells[i, 4].Value);
+                                var cabinet = new Cabinet() { CabinetId = "test", State = cabinetState, Area = cabinetArea };
+                                var cabinetSession = new CabinetSession() { CabinetSessionId = cabinetSessionId, Cabinet = cabinet, TimeStamp = cabinetSessionDate };
+                                cabinetView = new OmnicellCabinetViewModel(cabinetSession);
                             }
                         }
                     }
@@ -180,7 +183,7 @@ namespace PocketNurse.Controllers
                                         patientDescription.Allergies.Add(new Allergy() { AllergyId = Guid.Empty, AllergyName = allergy });
                                     }
                                 }
-                                cabinet.Patients.Add(patientDescription);
+                                cabinetView.Patients.Add(patientDescription);
                             }
                         }
                     }
@@ -207,7 +210,7 @@ namespace PocketNurse.Controllers
                                     pck.Workbook.Worksheets[2].Cells[i, patientIdIndex].Value == null) break;
                                 var patientId = Convert.ToString(pck.Workbook.Worksheets[2].Cells[i, patientIdIndex].Value);
                                 patientIdList.Add(patientId);
-                                patientDescription = cabinet.Patients.FirstOrDefault(p => p.Patient.PatientId == patientId);
+                                patientDescription = cabinetView.Patients.FirstOrDefault(p => p.Patient.PatientId == patientId);
                                 patientIdIndex++;
                             } while (patientDescription == null);
                             if(patientDescription == null)
@@ -240,7 +243,7 @@ namespace PocketNurse.Controllers
                                  i <= pck.Workbook.Worksheets[3].Dimension.End.Row;
                                  i++)
                         {
-                            cabinet.NotInFormulary.Add(new NotInFormulary()
+                            cabinetView.NotInFormulary.Add(new NotInFormulary()
                             {
                                 _id = -1,
                                 GenericName = (string)pck.Workbook.Worksheets[3].Cells[i, 1].Value,
@@ -258,7 +261,7 @@ namespace PocketNurse.Controllers
                     // process uploaded files
                     // Don't rely on or trust the FileName property without validation.
 
-                    return View(cabinet);
+                    return View(cabinetView);
                 }
             }
             return NotFound();
