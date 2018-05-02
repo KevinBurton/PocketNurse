@@ -76,6 +76,7 @@ namespace PocketNurse.Controllers
                         {
                             // Not enough columns
                             ModelState.AddModelError("session", $"Session worksheet doesn't have enough columns {pck.Workbook.Worksheets[0].Dimension.Columns}");
+                            return RedirectToAction("Index");
                         }
                         else
                         {
@@ -110,6 +111,12 @@ namespace PocketNurse.Controllers
                             }
                         }
                     }
+                    if(cabinetView == null)
+                    {
+                        ModelState.AddModelError("session", "no valid rows detected in session workseet");
+                        return RedirectToAction("Index");
+                    }
+
                     // Not enough rows to include header and data for patient
                     if (pck.Workbook.Worksheets[1].Dimension.Rows <= 1)
                     {
@@ -192,7 +199,7 @@ namespace PocketNurse.Controllers
                         // Not enough rows (no medication orders)
                         ModelState.AddModelError("medication-order", $"No medication orders {pck.Workbook.Worksheets[2].Dimension.Rows}");
                     }
-                    if (pck.Workbook.Worksheets[2].Dimension.Rows > 1)
+                    else
                     {
                         // Process data for this sheet
                         // Skip the headers
@@ -234,8 +241,12 @@ namespace PocketNurse.Controllers
                             }
                         }
                     }
-                    if (pck.Workbook.Worksheets[3].Dimension.Rows < 1) return RedirectToAction("Index");
-                    if (pck.Workbook.Worksheets[3].Dimension.Rows > 1)
+                    if (pck.Workbook.Worksheets[3].Dimension.Rows <= 1)
+                    {
+                        // Not enough rows (not in formulary)
+                        ModelState.AddModelError("notinformulary", $"No NotInFormulary rows {pck.Workbook.Worksheets[3].Dimension.Rows}");
+                    }
+                    else
                     {
                         // Process data for this sheet
                         // Skip the headers
