@@ -31,6 +31,86 @@ namespace PocketNurse.Controllers
         {
             return View();
         }
+
+        [HttpPost("Upload")]
+        public IActionResult Upload(IFormFile file)
+        {
+            // Bail out of the file was not uploaded
+            if (file == null)
+            {
+                // No file
+                ModelState.AddModelError("cabinet", "NULL file passed to Upload action in Import controller");
+                return RedirectToAction("Index");
+            }
+
+            long size = file.Length;
+
+            if (file.Length > 0)
+            {
+                // process uploaded file
+                // Don't rely on or trust the FileName property without validation.
+                using (var pck = new OfficeOpenXml.ExcelPackage())
+                {
+                    using (var stream = file.OpenReadStream())
+                    {
+                        pck.Load(stream);
+                    }
+
+                    var wsCount = pck.Workbook.Worksheets.Count();
+
+                    // There should be four worksheets
+                    if (wsCount < 4)
+                    {
+                        // Not enough worksheets
+                        ModelState.AddModelError("cabinet", $"Not enough worksheets -> {pck.Workbook.Worksheets.Count}");
+                        return RedirectToAction("Index");
+                    }
+                    OmnicellCabinetViewModel cabinetView = ReadSessionWorkSheet(pck.Workbook.Worksheets[0]);
+                    if(cabinetView == null)
+                    {
+                        return RedirectToAction("Index");
+                    }
+
+                    cabinetView.Patients.AddRange(ReadPatientWorkSheet(pck.Workbook.Worksheets[1]));
+
+                    var medicationOrderRawList = ReadMedicationOrderWorkSheet(pck.Workbook.Worksheets[2]);
+
+                    foreach(var medicationOrderRaw in medicationOrderRawList)
+                    {
+                        var found = false;
+                        foreach(var patientId in medicationOrderRaw.PatientIdList)
+                        {
+                            var patientDescription = cabinetView.Patients.FirstOrDefault(p => p.Patient.PatientId == patientId);
+                            if(patientDescription != null)
+                            {
+                                found = true;
+                                patientDescription.MedicationOrders.Add(new MedicationOrder()
+                                {
+                                    MedicationId = Guid.Empty,
+                                    PocketNurseItemId = medicationOrderRaw.PocketNurseItemId,
+                                    MedicationName = medicationOrderRaw.MedicationName,
+                                    Dose = medicationOrderRaw.Dose,
+                                    Frequency = medicationOrderRaw.Frequency,
+                                    Route = medicationOrderRaw.Route,
+                                    Patient = patientDescription.Patient
+                                });
+                            }
+                        }
+                        if(!found)
+                        {
+                            // Patient not found
+                            ModelState.AddModelError("medication-order", $"No patient found for the medication order for '{medicationOrderRaw.MedicationName}' for patients '{string.Join(",", medicationOrderRaw.PatientIdList)}'");
+                        }
+                    }
+
+                    cabinetView.NotInFormulary.AddRange(ReadNotInFormularyWorkSheet(pck.Workbook.Worksheets[3]));
+
+                    return View(cabinetView);
+                }
+            }
+            return NotFound();
+        }
+        #region Helpers
         private OmnicellCabinetViewModel ReadSessionWorkSheet(ExcelWorksheet wk)
         {
             if (wk.Dimension.Rows <= 1)
@@ -198,7 +278,7 @@ namespace PocketNurse.Controllers
                 // Not enough rows (not in formulary)
                 ModelState.AddModelError("notinformulary", $"No NotInFormulary rows {wk.Dimension.Rows}");
             }
-            else if(wk.Dimension.Columns < 8)
+            else if (wk.Dimension.Columns < 8)
             {
                 // Not enough columns (not in formulary)
                 ModelState.AddModelError("notinformulary", $"Not enough NotInFormulary columns {wk.Dimension.Columns}");
@@ -227,85 +307,6 @@ namespace PocketNurse.Controllers
             }
             return retval;
         }
-
-        [HttpPost("Upload")]
-        public IActionResult Upload(IFormFile file)
-        {
-            // Bail out of the file was not uploaded
-            if (file == null)
-            {
-                // No file
-                ModelState.AddModelError("cabinet", "NULL file passed to Upload action in Import controller");
-                return RedirectToAction("Index");
-            }
-
-            long size = file.Length;
-
-            if (file.Length > 0)
-            {
-                // process uploaded file
-                // Don't rely on or trust the FileName property without validation.
-                using (var pck = new OfficeOpenXml.ExcelPackage())
-                {
-                    using (var stream = file.OpenReadStream())
-                    {
-                        pck.Load(stream);
-                    }
-
-                    var wsCount = pck.Workbook.Worksheets.Count();
-
-                    // There should be four worksheets
-                    if (wsCount < 4)
-                    {
-                        // Not enough worksheets
-                        ModelState.AddModelError("cabinet", $"Not enough worksheets -> {pck.Workbook.Worksheets.Count}");
-                        return RedirectToAction("Index");
-                    }
-                    OmnicellCabinetViewModel cabinetView = ReadSessionWorkSheet(pck.Workbook.Worksheets[0]);
-                    if(cabinetView == null)
-                    {
-                        return RedirectToAction("Index");
-                    }
-
-                    cabinetView.Patients.AddRange(ReadPatientWorkSheet(pck.Workbook.Worksheets[1]));
-
-                    var medicationOrderRawList = ReadMedicationOrderWorkSheet(pck.Workbook.Worksheets[2]);
-
-                    foreach(var medicationOrderRaw in medicationOrderRawList)
-                    {
-                        var found = false;
-                        foreach(var patientId in medicationOrderRaw.PatientIdList)
-                        {
-                            var patientDescription = cabinetView.Patients.FirstOrDefault(p => p.Patient.PatientId == patientId);
-                            if(patientDescription != null)
-                            {
-                                found = true;
-                                patientDescription.MedicationOrders.Add(new MedicationOrder()
-                                {
-                                    MedicationId = Guid.Empty,
-                                    PocketNurseItemId = medicationOrderRaw.PocketNurseItemId,
-                                    MedicationName = medicationOrderRaw.MedicationName,
-                                    Dose = medicationOrderRaw.Dose,
-                                    Frequency = medicationOrderRaw.Frequency,
-                                    Route = medicationOrderRaw.Route,
-                                    Patient = patientDescription.Patient
-                                });
-                                break;
-                            }
-                        }
-                        if(!found)
-                        {
-                            // Patient not found
-                            ModelState.AddModelError("medication-order", $"No patient found for the medication order for '{medicationOrderRaw.MedicationName}' for patients '{string.Join(",", medicationOrderRaw.PatientIdList)}'");
-                        }
-                    }
-
-                    cabinetView.NotInFormulary.AddRange(ReadNotInFormularyWorkSheet(pck.Workbook.Worksheets[3]));
-
-                    return View(cabinetView);
-                }
-            }
-            return NotFound();
-        }
+        #endregion
     }
 }
