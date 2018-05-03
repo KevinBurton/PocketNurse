@@ -124,6 +124,16 @@ namespace PocketNurse.Controllers
                 ModelState.AddModelError("session", $"Session worksheet doesn't have enough columns {wk.Dimension.Columns}");
                 return null;
             }
+            if (wk.Name != "Session" ||
+                ((string)wk.Cells[1, 1].Value).Trim() != "Session" ||
+                ((string)wk.Cells[1, 2].Value).Trim() != "Date" ||
+                ((string)wk.Cells[1, 3].Value).Trim() != "State" ||
+                ((string)wk.Cells[1, 4].Value).Trim() != "Area")
+            {
+                // Not enough columns
+                ModelState.AddModelError("session", "This doesn't appear to be a session worksheet");
+                return null;
+            }
             // Skip blank rows
             if (wk.Cells[2, 1].Value == null ||
                 wk.Cells[2, 2].Value == null ||
@@ -131,7 +141,7 @@ namespace PocketNurse.Controllers
                 wk.Cells[2, 4].Value == null)
             {
                 // Invalid content
-                ModelState.AddModelError("session", "Session worksheet has invlid content");
+                ModelState.AddModelError("session", "Session worksheet has invalid content");
                 return null;
             }
             var cabinetSessionId = Convert.ToString(wk.Cells[2, 1].Value);
@@ -167,6 +177,18 @@ namespace PocketNurse.Controllers
             {
                 // Not enough columns
                 ModelState.AddModelError("patient", $"Patient worksheet doesn't have enough columns {wk.Dimension.Columns}");
+                return retval;
+            }
+            if(wk.Name != "Patient Information" ||
+               ((string)wk.Cells[1, 1].Value).Trim() != "Patient First Name" ||
+               ((string)wk.Cells[1, 2].Value).Trim() != "Patient Last name" ||
+               ((string)wk.Cells[1, 3].Value).Trim() != "DOB" ||
+               ((string)wk.Cells[1, 4].Value).Trim() != "MRN" ||
+               ((string)wk.Cells[1, 5].Value).Trim() != "Patient ID (if different than MRN)" ||
+               ((string)wk.Cells[1, 6].Value).Trim() != "Allergies")
+            {
+                // Identification
+                ModelState.AddModelError("patient", "This doesn't appear to be a patient worksheet");
                 return retval;
             }
             // Process data for this sheet
@@ -234,6 +256,18 @@ namespace PocketNurse.Controllers
         private List<MedicationOrderRaw> ReadMedicationOrderWorkSheet(ExcelWorksheet wk)
         {
             var retval = new List<MedicationOrderRaw>();
+            if (wk.Name != "Med Order Information" ||
+                ((string)wk.Cells[1, 1].Value).Trim() != "Medication ID # (Pocket Nurse item ID)" ||
+                ((string)wk.Cells[1, 2].Value).Trim() != "Medication Name" ||
+                ((string)wk.Cells[1, 3].Value).Trim() != "Dose" ||
+                ((string)wk.Cells[1, 4].Value).Trim() != "Frequency" ||
+                ((string)wk.Cells[1, 5].Value).Trim() != "Route" ||
+                (((string)wk.Cells[1, 6].Value).Trim() != "Patient ID" && ((string)wk.Cells[1, 6].Value).Trim() != "Patient ID 1"))
+            {
+                // Identification
+                ModelState.AddModelError("medication-order", "This doesn't appear to be a medication-order worksheet");
+                return retval;
+            }
             if (wk.Dimension.Rows <= 1)
             {
                 // Not enough rows (no medication orders)
@@ -281,6 +315,19 @@ namespace PocketNurse.Controllers
             {
                 // Not enough columns (not in formulary)
                 ModelState.AddModelError("notinformulary", $"Not enough NotInFormulary columns {wk.Dimension.Columns}");
+            }
+            else if (wk.Name != "Items not in PN formulary" ||
+                     ((string)wk.Cells[1, 1].Value).Trim() != "Generic Name" ||
+                     ((string)wk.Cells[1, 2].Value).Trim() != "Alias" ||
+                     ((string)wk.Cells[1, 3].Value).Trim() != "Strength" ||
+                     ((string)wk.Cells[1, 4].Value).Trim() != "Unit" ||
+                     ((string)wk.Cells[1, 5].Value).Trim() != "volume" ||
+                     ((string)wk.Cells[1, 6].Value).Trim() != "unit" ||
+                     (((string)wk.Cells[1, 7].Value).Trim() != "Total container volume for Liq/Inj" && ((string)wk.Cells[1, 7].Value).Trim() != "Total container volume for Liq/IV") ||
+                     ((string)wk.Cells[1, 8].Value).Trim() != "Route")
+            {
+                // Identification
+                ModelState.AddModelError("notinformulary", "This doesn't appear to be a notinformulary worksheet");
             }
             else
             {
