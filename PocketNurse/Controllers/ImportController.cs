@@ -77,13 +77,17 @@ namespace PocketNurse.Controllers
 
                     foreach(var medicationOrderRaw in medicationOrderRawList)
                     {
-                        var found = false;
-                        foreach(var patientId in medicationOrderRaw.PatientIdList)
+                        var patientDescriptionList = cabinetView.Patients.Where(pd => medicationOrderRaw.PatientIdList.Contains(pd.Patient.PatientId)).ToList();
+                        if(patientDescriptionList.Count != medicationOrderRaw.PatientIdList.Count)
                         {
-                            var patientDescription = cabinetView.Patients.FirstOrDefault(p => p.Patient.PatientId == patientId);
+                            var patientDiffList = medicationOrderRaw.PatientIdList.Except<string>(patientDescriptionList.Select(pd => pd.Patient.PatientId));
+                            // Patients not found
+                            ModelState.AddModelError("medication-order", $"No patients found for the medication order for '{medicationOrderRaw.MedicationName}' for patients '{string.Join(",", patientDiffList)}'");
+                        }
+                        foreach (var patientDescription in patientDescriptionList)
+                        {
                             if(patientDescription != null)
                             {
-                                found = true;
                                 patientDescription.MedicationOrders.Add(new MedicationOrder()
                                 {
                                     MedicationId = Guid.Empty,
@@ -95,11 +99,6 @@ namespace PocketNurse.Controllers
                                     Patient = patientDescription.Patient
                                 });
                             }
-                        }
-                        if(!found)
-                        {
-                            // Patient not found
-                            ModelState.AddModelError("medication-order", $"No patient found for the medication order for '{medicationOrderRaw.MedicationName}' for patients '{string.Join(",", medicationOrderRaw.PatientIdList)}'");
                         }
                     }
 
