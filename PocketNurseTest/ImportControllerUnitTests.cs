@@ -38,7 +38,10 @@ namespace PocketNurseTest
                                                _patientAllergyRepository.Object,
                                                _medicationOrderRepository.Object,
                                                _notInFormularyRepository.Object);
-            var filePath = "../../../SampleRequest1.xlsx";
+        }
+        private void SetupFile(string path)
+        {
+            var filePath = path;
             var testFileStream = ReadTestData(filePath);
             var fileInfo = new FileInfo(filePath);
             _fileSize = fileInfo.Length;
@@ -49,11 +52,13 @@ namespace PocketNurseTest
             _file.Setup(_ => _.FileName).Returns("SampleRequest.xlsx");
             _file.Setup(_ => _.Length).Returns(_fileSize);
             _file.Setup(m => m.CopyToAsync(It.IsAny<Stream>(), default(CancellationToken))).Returns(Task.CompletedTask);
+
         }
         [TestMethod]
         [Owner("Kevin Burton")]
-        public void ImportIndexTest()
+        public void ImportUploadTest()
         {
+            SetupFile("../../../SampleRequest1.xlsx");
             var response = _controller.Upload(_file.Object);
             Assert.IsInstanceOfType(response, typeof(IActionResult));
             Assert.IsInstanceOfType(response, typeof(ViewResult));
@@ -61,6 +66,21 @@ namespace PocketNurseTest
             var modelResponse = ((ViewResult)response).Model as OmnicellCabinetViewModel;
             Debug.WriteLine($"Patients {modelResponse.Patients.Count} NotInFormulary {modelResponse.NotInFormulary.Count}");
             Assert.IsTrue(modelResponse.Patients.Count == 2);
+        }
+        [TestMethod]
+        [Owner("Kevin Burton")]
+        public void ImportUploadErrorTest()
+        {
+            SetupFile("../../../ErrorRequest1.xlsx");
+            var response = _controller.Upload(_file.Object);
+            Assert.IsInstanceOfType(response, typeof(IActionResult));
+            Assert.IsInstanceOfType(response, typeof(ViewResult));
+            Assert.IsInstanceOfType(((ViewResult)response).Model, typeof(OmnicellCabinetViewModel));
+            Assert.IsFalse(_controller.ModelState.IsValid);
+            Assert.IsTrue(_controller.ModelState.Keys.Count() == 2);
+            Assert.IsTrue(_controller.ModelState["patient"].Errors.Count == 1);
+            Assert.IsTrue(_controller.ModelState["patient"].Errors.Select(e => e.ErrorMessage).First() == "This doesn't appear to be a patient worksheet");
+            Assert.IsTrue(_controller.ModelState["medication-order"].Errors.Count == 6);
         }
         private FileStream ReadTestData(string path)
         {
