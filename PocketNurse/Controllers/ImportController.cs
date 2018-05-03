@@ -68,7 +68,7 @@ namespace PocketNurse.Controllers
             var cabinetSessionDate = DateTime.FromOADate(dateNum);
             var cabinetState = Convert.ToString(wk.Cells[2, 3].Value);
             var cabinetArea = Convert.ToString(wk.Cells[2, 4].Value);
-            var cabinet = new Cabinet() { CabinetId = "test", State = cabinetState, Area = cabinetArea };
+            var cabinet = new Cabinet() { State = cabinetState, Area = cabinetArea };
             var cabinetSession = new CabinetSession() { CabinetSessionId = cabinetSessionId, Cabinet = cabinet, TimeStamp = cabinetSessionDate };
 
             return new OmnicellCabinetViewModel(cabinetSession);
