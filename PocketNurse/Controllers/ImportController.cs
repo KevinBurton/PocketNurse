@@ -243,6 +243,8 @@ namespace PocketNurse.Controllers
 
             if (file.Length > 0)
             {
+                // process uploaded file
+                // Don't rely on or trust the FileName property without validation.
                 using (var pck = new OfficeOpenXml.ExcelPackage())
                 {
                     using (var stream = file.OpenReadStream())
@@ -300,8 +302,6 @@ namespace PocketNurse.Controllers
 
                     cabinetView.NotInFormulary.AddRange(ReadNotInFormularyWorkSheet(pck.Workbook.Worksheets[3]));
 
-                    // process uploaded files
-                    // Don't rely on or trust the FileName property without validation.
                     return View(cabinetView);
                 }
             }
