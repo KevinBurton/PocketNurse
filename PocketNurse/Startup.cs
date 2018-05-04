@@ -71,10 +71,7 @@ namespace PocketNurse
             });
 
             // Add repositories
-            services.AddScoped<IPatientRepository, PatientRepository>();
-            services.AddScoped<IMedicationOrderRepository, MedicationOrderRepository>();
-            services.AddScoped<IPatientAllergyRepository, PatientAllergyRepository>();
-            services.AddScoped<INotInFormularyRepository, NotInFormularyRepository>();
+            services.AddScoped<IPocketNurseRepository, PocketNurseRepository>();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();

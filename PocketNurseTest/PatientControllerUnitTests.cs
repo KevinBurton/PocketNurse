@@ -9,21 +9,22 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PocketNurseTest
 {
     [TestClass]
     public class PatientControllerUnitTests
     {
-        Mock<IPatientRepository> _repository;
+        Mock<IPocketNurseRepository> _repository;
         PatientController _controller;
 
         [TestInitialize]
         public void Setup()
         {
-            _repository = new Mock<IPatientRepository>();
-            _repository.Setup(m => m.GetAll()).Returns(GetTestPatients());
-            _repository.Setup(m => m.Find(It.IsAny<string>())).Returns(GetTestPatients().First);
+            _repository = new Mock<IPocketNurseRepository>();
+            _repository.Setup(m => m.GetAllPatients()).Returns(GetTestPatients());
+            _repository.Setup(m => m.FindPatient(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult<Patient>(GetTestPatients().First()));
             _controller = new PatientController(_repository.Object);
         }
         [TestMethod]
@@ -41,7 +42,7 @@ namespace PocketNurseTest
         [Owner("Kevin Burton")]
         public void DetailsTest()
         {
-            var response = _controller.Details("1");
+            var response = _controller.Details("1", 1);
             Assert.IsNotNull(response);
             Assert.IsInstanceOfType(response, typeof(ViewResult));
             Assert.IsInstanceOfType((response as ViewResult).Model, typeof(Patient));
@@ -65,10 +66,10 @@ namespace PocketNurseTest
         [Owner("Kevin Burton")]
         public void EditTest()
         {
-            var response = _controller.Edit("1");
+            var response = _controller.Edit("1", 1);
             Assert.IsNotNull(response);
             Assert.IsInstanceOfType(response, typeof(ViewResult));
-            _repository.Verify(mock => mock.Find(It.IsAny<string>()), Times.Once());
+            _repository.Verify(mock => mock.FindPatient(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
             var patient = GetTestPatients().First();
             response = _controller.Edit(patient.PatientId, patient);
             _repository.Verify(mock => mock.Update(It.IsAny<Patient>()), Times.Once());
@@ -79,16 +80,16 @@ namespace PocketNurseTest
         [Owner("Kevin Burton")]
         public void DeleteTest()
         {
-            var response = _controller.Delete("1");
+            var response = _controller.Delete("1", 1);
             Assert.IsNotNull(response);
             Assert.IsInstanceOfType(response, typeof(ViewResult));
-            _repository.Verify(mock => mock.Find(It.IsAny<string>()), Times.Once());
+            _repository.Verify(mock => mock.FindPatient(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
         }
         [TestMethod]
         [Owner("Kevin Burton")]
         public void DeleteConfirmedTest()
         {
-            var response = _controller.DeleteConfirmed("1");
+            var response = _controller.DeleteConfirmed("1", 1);
             Assert.IsNotNull(response);
             Assert.IsInstanceOfType(response, typeof(RedirectToActionResult));
             _repository.Verify(mock => mock.Delete(It.IsAny<Patient>()), Times.Once());

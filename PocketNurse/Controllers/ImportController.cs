@@ -12,20 +12,11 @@ namespace PocketNurse.Controllers
 {
     public class ImportController : Controller
     {
-        private readonly IPatientRepository _patientRepository;
-        private readonly IPatientAllergyRepository _patientAllergyRepository;
-        private readonly IMedicationOrderRepository _medicationOrderRepository;
-        private readonly INotInFormularyRepository _notInFormularyRepository;
+        private readonly IPocketNurseRepository _pocketNurseRepository;
 
-        public ImportController(IPatientRepository patientRepository,
-                                IPatientAllergyRepository patientAllergyRepository,
-                                IMedicationOrderRepository medicationOrderRepository,
-                                INotInFormularyRepository notInFormularyRepository)
+        public ImportController(IPocketNurseRepository pocketNurseRepository)
         {
-            _patientRepository = patientRepository;
-            _patientAllergyRepository = patientAllergyRepository;
-            _medicationOrderRepository = medicationOrderRepository;
-            _notInFormularyRepository = notInFormularyRepository;
+            _pocketNurseRepository = pocketNurseRepository;
         }
         public IActionResult Index()
         {

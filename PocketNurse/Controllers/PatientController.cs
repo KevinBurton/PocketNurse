@@ -12,9 +12,9 @@ namespace PocketNurse.Controllers
 {
     public class PatientController : Controller
     {
-        private readonly IPatientRepository _repository;
+        private readonly IPocketNurseRepository _repository;
 
-        public PatientController(IPatientRepository repository)
+        public PatientController(IPocketNurseRepository repository)
         {
             _repository = repository;
         }
@@ -22,13 +22,13 @@ namespace PocketNurse.Controllers
         // GET: Patients
         public IActionResult Index()
         {
-            return View(_repository.GetAll().ToList());
+            return View(_repository.GetAllPatients().ToList());
         }
 
-        // GET: Patients/Details/<key>
-        public IActionResult Details(string id)
+        // GET: Patients/Details/<key>/<key>
+        public IActionResult Details(string patientId, int cabinetId)
         {
-            var patient = _repository.Find(id);
+            var patient = _repository.FindPatient(patientId, cabinetId);
             if (patient == null)
             {
                 return NotFound();
@@ -58,10 +58,10 @@ namespace PocketNurse.Controllers
             return View(patient);
         }
 
-        // GET: Patients/Edit/5
-        public IActionResult Edit(string id)
+        // GET: Patients/Edit/5/1
+        public IActionResult Edit(string patientId, int cabinetId)
         {
-            var patient = _repository.Find(id);
+            var patient = _repository.FindPatient(patientId, cabinetId);
             if (patient == null)
             {
                 return NotFound();
@@ -90,7 +90,7 @@ namespace PocketNurse.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PatientExists(patient.PatientId))
+                    if (!PatientExists(patient.PatientId, patient.CabinetId))
                     {
                         return NotFound();
                     }
@@ -104,10 +104,10 @@ namespace PocketNurse.Controllers
             return View(patient);
         }
 
-        // GET: Patients/Delete/5
-        public IActionResult Delete(string id)
+        // GET: Patients/Delete/5/1
+        public IActionResult Delete(string patientId, int cabinetId)
         {
-            var patient = _repository.Find(id);
+            var patient = _repository.FindPatient(patientId, cabinetId);
             if (patient == null)
             {
                 return NotFound();
@@ -116,20 +116,20 @@ namespace PocketNurse.Controllers
             return View(patient);
         }
 
-        // POST: Patients/Delete/5
+        // POST: Patients/Delete/5/1
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(string patientId, int cabinetId)
         {
-            var patient = _repository.Find(id);
+            var patient = await _repository.FindPatient(patientId, cabinetId);
             _repository.Delete(patient);
-            _repository.Save();
+            await _repository.Save();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PatientExists(string id)
+        private bool PatientExists(string patientId, int cabinetId)
         {
-            return _repository.Any(e => e.PatientId == id);
+            return _repository.Any(e => e.PatientId == patientId && e.CabinetId == cabinetId);
         }
     }
 }

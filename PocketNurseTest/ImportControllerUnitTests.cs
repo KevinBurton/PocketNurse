@@ -18,26 +18,17 @@ namespace PocketNurseTest
     [TestClass]
     public class ImportControllerUnitTests
     {
-        Mock<IPatientRepository> _patientRepository;
-        Mock<IPatientAllergyRepository> _patientAllergyRepository;
-        Mock<IMedicationOrderRepository> _medicationOrderRepository;
-        Mock<INotInFormularyRepository> _notInFormularyRepository;
+        Mock<IPocketNurseRepository> _pocketNurseRepository;
         ImportController _controller;
         Mock<IFormFile> _file;
         long _fileSize;
         [TestInitialize]
         public void Setup()
         {
-            _patientRepository = new Mock<IPatientRepository>();
-            _patientRepository.Setup(m => m.GetAll()).Returns(GetTestPatients());
-            _patientRepository.Setup(m => m.Find(It.IsAny<string>())).Returns(GetTestPatients().First);
-            _patientAllergyRepository = new Mock<IPatientAllergyRepository>();
-            _medicationOrderRepository = new Mock<IMedicationOrderRepository>();
-            _notInFormularyRepository = new Mock<INotInFormularyRepository>();
-            _controller = new ImportController(_patientRepository.Object,
-                                               _patientAllergyRepository.Object,
-                                               _medicationOrderRepository.Object,
-                                               _notInFormularyRepository.Object);
+            _pocketNurseRepository = new Mock<IPocketNurseRepository>();
+            _pocketNurseRepository.Setup(m => m.GetAllPatients()).Returns(GetTestPatients());
+            _pocketNurseRepository.Setup(m => m.FindPatient(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult<Patient>(GetTestPatients().First()));
+            _controller = new ImportController(_pocketNurseRepository.Object);
         }
         private void SetupFile(string path)
         {
