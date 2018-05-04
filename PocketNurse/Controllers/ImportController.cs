@@ -90,7 +90,6 @@ namespace PocketNurse.Controllers
                             {
                                 patientDescription.MedicationOrders.Add(new MedicationOrder()
                                 {
-                                    MedicationId = Guid.Empty,
                                     PocketNurseItemId = medicationOrderRaw.PocketNurseItemId,
                                     MedicationName = medicationOrderRaw.MedicationName,
                                     Dose = medicationOrderRaw.Dose,

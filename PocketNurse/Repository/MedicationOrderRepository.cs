@@ -19,7 +19,7 @@ namespace PocketNurse.Repository
         }
         public void Update(MedicationOrder entity)
         {
-            var entry = Context.MedicationOrder.Where(s => s.MedicationId == entity.MedicationId);
+            var entry = Context.MedicationOrder.Where(s => s.MedicationOrderId == entity.MedicationOrderId);
             Context.MedicationOrder.Attach(entity);
         }
         public void Add(MedicationOrder entity)

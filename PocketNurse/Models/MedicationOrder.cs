@@ -6,7 +6,7 @@ namespace PocketNurse.Models
     public class MedicationOrder
     {
         [Key]
-        public Guid MedicationId { get; set; }
+        public int MedicationOrderId { get; set; }
         [StringLength(128)]
         public string PocketNurseItemId { get; set; }
         [StringLength(128)]
