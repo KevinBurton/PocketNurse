@@ -72,6 +72,7 @@ namespace PocketNurse
 
             // Add repositories
             services.AddScoped<IPocketNurseRepository, PocketNurseRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
