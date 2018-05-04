@@ -129,7 +129,7 @@ namespace PocketNurse.Controllers
 
         private bool PatientExists(string patientId, int cabinetId)
         {
-            return _repository.Any(e => e.PatientId == patientId && e.CabinetId == cabinetId);
+            return _repository.AnyPatient(e => e.PatientId == patientId && e.CabinetId == cabinetId);
         }
     }
 }

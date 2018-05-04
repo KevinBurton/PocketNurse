@@ -14,7 +14,7 @@ namespace PocketNurse.Repository
         void Delete(Patient entity);
         void DeleteAll(IEnumerable<Patient> entity);
         void Update(Patient entity);
-        bool Any(Func<Patient, bool> predicate = null);
+        bool AnyPatient(Func<Patient, bool> predicate = null);
 
         IEnumerable<Cabinet> GetAllCabinets();
         void Add(Cabinet entity);
@@ -23,7 +23,7 @@ namespace PocketNurse.Repository
         void Delete(Cabinet entity);
         void DeleteAll(IEnumerable<Cabinet> entity);
         void Update(Cabinet entity);
-        bool Any(Func<Cabinet, bool> predicate = null);
+        bool AnyCabinet(Func<Cabinet, bool> predicate = null);
 
         Task Save();
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using PocketNurse.Models;
@@ -6,6 +7,7 @@ using PocketNurse.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 
 namespace PocketNurse.Controllers
@@ -22,10 +24,12 @@ namespace PocketNurse.Controllers
         {
             return View();
         }
-
+        [Authorize]
         [HttpPost("Upload")]
         public IActionResult Upload(IFormFile file)
         {
+            // https://stackoverflow.com/questions/30701006/how-to-get-the-current-logged-in-user-id-asp-net-core
+            var currentUser = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             // Bail out of the file was not uploaded
             if (file == null)
             {

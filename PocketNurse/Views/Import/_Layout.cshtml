@@ -1,5 +1,5 @@
 ﻿@using PocketNurse.Repository
-@inject IPatientRepository Patients
+@inject IPocketNurseRepository PocketNurse
 
 <!DOCTYPE html>
 <html>
@@ -33,7 +33,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (Patients.Any())
+                    @if (PocketNurse.AnyPatient())
                     {
                         <li><a asp-area="" asp-controller="Patient" asp-action="Index">Patients</a></li>
                     }

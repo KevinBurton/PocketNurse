@@ -43,7 +43,7 @@ namespace PocketNurse.Repository
             var entry = Context.Patient.Where(s => s.PatientId == entity.PatientId);
             Context.Patient.Attach(entity);
         }
-        public bool Any(Func<Patient, bool> predicate = null)
+        public bool AnyPatient(Func<Patient, bool> predicate = null)
         {
             if (predicate == null)
                 return Context.Patient.Any();
@@ -79,7 +79,7 @@ namespace PocketNurse.Repository
             var entry = Context.Cabinet.Where(s => s.CabinetId == entity.CabinetId);
             Context.Cabinet.Attach(entity);
         }
-        public bool Any(Func<Cabinet, bool> predicate = null)
+        public bool AnyCabinet(Func<Cabinet, bool> predicate = null)
         {
             if (predicate == null)
                 return Context.Cabinet.Any();
