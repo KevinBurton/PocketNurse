@@ -13,8 +13,6 @@ FROM build AS publish
 RUN dotnet publish -c Release -o /app
 
 FROM base AS final
-ENV ASPNETCORE_ENVIRONMENT Docker
 WORKDIR /app
 COPY --from=publish /app .
-COPY appsettings.Docker.json appsettings.json
 ENTRYPOINT ["dotnet", "PocketNurse.dll"]
