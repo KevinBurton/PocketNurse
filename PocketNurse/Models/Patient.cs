@@ -8,8 +8,8 @@ namespace PocketNurse.Models
         [Key]
         public string PatientId { get; set; }
         [Required]
-        [StringLength(450)]
-        public string CabinetSessionId { get; set; }
+        public int CabinetId { get; set; }
+        public Cabinet Cabinet { get; set; }
         public string MRN { get; set; }
         [StringLength(128)]
         public string First { get; set; }

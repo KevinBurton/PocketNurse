@@ -18,13 +18,10 @@ namespace PocketNurse.Models
         public DbSet<PocketNurse.Models.CabinetSession> CabinetSession { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Patient>()
-                .Property(b => b.CabinetSessionId)
-                .HasDefaultValueSql("-1");
             modelBuilder.Entity<Patient>().HasKey(table => new
             {
                 table.PatientId,
-                table.CabinetSessionId
+                table.CabinetId
             });
         }
     }
