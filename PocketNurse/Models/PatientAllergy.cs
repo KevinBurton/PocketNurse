@@ -9,7 +9,7 @@ namespace PocketNurse.Models
     public class PatientAllergy
     {
         [Key]
-        public Guid PatientAllergyId { get; set; }
+        public int PatientAllergyId { get; set; }
         public Allergy Allergy { get; set; }
         public Patient Patient { get; set; }
     }

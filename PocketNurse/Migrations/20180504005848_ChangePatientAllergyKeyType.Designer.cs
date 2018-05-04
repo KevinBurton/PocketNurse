@@ -11,9 +11,10 @@ using System;
 namespace PocketNurse.Migrations
 {
     [DbContext(typeof(PocketNurseContext))]
-    partial class PocketNurseContextModelSnapshot : ModelSnapshot
+    [Migration("20180504005848_ChangePatientAllergyKeyType")]
+    partial class ChangePatientAllergyKeyType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
