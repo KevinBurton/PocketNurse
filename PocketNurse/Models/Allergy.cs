@@ -6,7 +6,7 @@ namespace PocketNurse.Models
     public class Allergy
     {
         [Key]
-        public Guid AllergyId { get; set; }
+        public int AllergyId { get; set; }
         [StringLength(128)]
         public string AllergyName { get; set; }
     }

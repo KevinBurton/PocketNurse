@@ -244,7 +244,7 @@ namespace PocketNurse.Controllers
                 {
                     foreach (var allergy in allergiesString.Split(','))
                     {
-                        patientDescription.Allergies.Add(new Allergy() { AllergyId = Guid.Empty, AllergyName = allergy });
+                        patientDescription.Allergies.Add(new Allergy() { AllergyName = allergy });
                     }
                 }
                 retval.Add(patientDescription);
