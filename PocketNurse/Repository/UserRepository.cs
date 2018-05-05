@@ -1,4 +1,5 @@
-﻿using PocketNurse.Data;
+﻿using System.Linq;
+using PocketNurse.Data;
 using PocketNurse.Models;
 using System.Collections.Generic;
 
@@ -15,6 +16,10 @@ namespace PocketNurse.Repository
         public IEnumerable<ApplicationUser> GetAllUsers()
         {
             return Context.Users;
+        }
+        public ApplicationUser CurrentUser()
+        {
+            return Context.Users.Single();
         }
     }
 }

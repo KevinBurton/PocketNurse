@@ -9,5 +9,6 @@ namespace PocketNurse.Repository
     public interface IUserRepository
     {
         IEnumerable<ApplicationUser> GetAllUsers();
+        ApplicationUser CurrentUser();
     }
 }

@@ -17,12 +17,12 @@ namespace PocketNurse.Controllers
     [Authorize]
     public class ImportController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserRepository _userRepository;
         private readonly IPocketNurseRepository _pocketNurseRepository;
 
-        public ImportController(UserManager<ApplicationUser> userManager, IPocketNurseRepository pocketNurseRepository)
+        public ImportController(IUserRepository userRepository, IPocketNurseRepository pocketNurseRepository)
         {
-            _userManager = userManager;
+            _userRepository = userRepository;
             _pocketNurseRepository = pocketNurseRepository;
         }
         public IActionResult Index()
@@ -30,22 +30,8 @@ namespace PocketNurse.Controllers
             return View();
         }
         [HttpPost("Upload")]
-        public async Task<IActionResult> Upload(IFormFile file)
+        public IActionResult Upload(IFormFile file)
         {
-            // https://stackoverflow.com/questions/30701006/how-to-get-the-current-logged-in-user-id-asp-net-core
-            var currentUser = User.FindFirst(ClaimTypes.Name)?.Value;
-            // https://stackoverflow.com/questions/35781423/how-should-i-access-my-applicationuser-properties-from-within-my-mvc-6-views
-            if (User != null && User.Identity.IsAuthenticated)
-            {
-                var userName = User.Identity.Name;
-                var appUser = await _userManager.FindByNameAsync(User.Identity.Name);
-                if(appUser == null)
-                {
-                    // No file
-                    ModelState.AddModelError("cabinet", "NULL ApplicationUser in Upload action in Import controller");
-                    return RedirectToAction("Index");
-                }
-            }
             // Bail out of the file was not uploaded
             if (file == null)
             {
@@ -58,6 +44,8 @@ namespace PocketNurse.Controllers
 
             if (file.Length > 0)
             {
+                var appUser = _userRepository.CurrentUser();
+
                 // process uploaded file
                 // Don't rely on or trust the FileName property without validation.
                 using (var pck = new OfficeOpenXml.ExcelPackage())

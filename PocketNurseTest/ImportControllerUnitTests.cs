@@ -20,18 +20,18 @@ namespace PocketNurseTest
     public class ImportControllerUnitTests
     {
         Mock<IPocketNurseRepository> _pocketNurseRepository;
-        Mock<UserManager<ApplicationUser>> _userManager;
+        Mock<IUserRepository> _userRepository;
         ImportController _controller;
         Mock<IFormFile> _file;
         long _fileSize;
         [TestInitialize]
         public void Setup()
         {
-            _userManager = new Mock<UserManager<ApplicationUser>>();
+            _userRepository = new Mock<IUserRepository>();
             _pocketNurseRepository = new Mock<IPocketNurseRepository>();
             _pocketNurseRepository.Setup(m => m.GetAllPatients()).Returns(GetTestPatients());
             _pocketNurseRepository.Setup(m => m.FindPatient(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult<Patient>(GetTestPatients().First()));
-            _controller = new ImportController(_userManager.Object, _pocketNurseRepository.Object);
+            _controller = new ImportController(_userRepository.Object, _pocketNurseRepository.Object);
         }
         private void SetupFile(string path)
         {
@@ -53,7 +53,7 @@ namespace PocketNurseTest
         public void ImportUploadTest()
         {
             SetupFile("../../../SampleRequest1.xlsx");
-            var response = _controller.Upload(_file.Object).Result;
+            var response = _controller.Upload(_file.Object);
             Assert.IsInstanceOfType(response, typeof(IActionResult));
             Assert.IsInstanceOfType(response, typeof(ViewResult));
             Assert.IsInstanceOfType(((ViewResult)response).Model, typeof(OmnicellCabinetViewModel));
@@ -66,7 +66,7 @@ namespace PocketNurseTest
         public void ImportUploadErrorTest()
         {
             SetupFile("../../../ErrorRequest1.xlsx");
-            var response = _controller.Upload(_file.Object).Result;
+            var response = _controller.Upload(_file.Object);
             Assert.IsInstanceOfType(response, typeof(IActionResult));
             Assert.IsInstanceOfType(response, typeof(ViewResult));
             Assert.IsInstanceOfType(((ViewResult)response).Model, typeof(OmnicellCabinetViewModel));
