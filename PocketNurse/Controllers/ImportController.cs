@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using PocketNurse.Models;
@@ -9,27 +10,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace PocketNurse.Controllers
 {
+    [Authorize]
     public class ImportController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IPocketNurseRepository _pocketNurseRepository;
 
-        public ImportController(IPocketNurseRepository pocketNurseRepository)
+        public ImportController(UserManager<ApplicationUser> userManager, IPocketNurseRepository pocketNurseRepository)
         {
+            _userManager = userManager;
             _pocketNurseRepository = pocketNurseRepository;
         }
         public IActionResult Index()
         {
             return View();
         }
-        [Authorize]
         [HttpPost("Upload")]
-        public IActionResult Upload(IFormFile file)
+        public async Task<IActionResult> Upload(IFormFile file)
         {
             // https://stackoverflow.com/questions/30701006/how-to-get-the-current-logged-in-user-id-asp-net-core
-            var currentUser = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = User.FindFirst(ClaimTypes.Name)?.Value;
+            // https://stackoverflow.com/questions/35781423/how-should-i-access-my-applicationuser-properties-from-within-my-mvc-6-views
+            if (User != null && User.Identity.IsAuthenticated)
+            {
+                var userName = User.Identity.Name;
+                var appUser = await _userManager.FindByNameAsync(User.Identity.Name);
+                if(appUser == null)
+                {
+                    // No file
+                    ModelState.AddModelError("cabinet", "NULL ApplicationUser in Upload action in Import controller");
+                    return RedirectToAction("Index");
+                }
+            }
             // Bail out of the file was not uploaded
             if (file == null)
             {
