@@ -7,6 +7,7 @@ using PocketNurse.Models;
 using PocketNurse.Repository;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
@@ -39,9 +40,7 @@ namespace PocketNurse.Controllers
                 ModelState.AddModelError("cabinet", "NULL file passed to Upload action in Import controller");
                 return RedirectToAction("Index");
             }
-            var re = new Regex(@"\.xlsx$");
-            var match = re.Match(file.FileName);
-            if(!match.Success)
+            if (Path.GetExtension(file.FileName) != "xlsx")
             {
                 // Invalid file type (extension)
                 ModelState.AddModelError("cabinet", "Invalid file extension to Upload action in Import controller");
