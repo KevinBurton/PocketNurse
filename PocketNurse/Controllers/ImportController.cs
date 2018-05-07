@@ -31,6 +31,7 @@ namespace PocketNurse.Controllers
             return View();
         }
         [HttpPost("Upload")]
+        [ValidateAntiForgeryToken]
         public IActionResult Upload(IFormFile file)
         {
             // Bail out of the file was not uploaded
@@ -51,6 +52,7 @@ namespace PocketNurse.Controllers
 
             if (file.Length > 0)
             {
+                //var appUser = await GetCurrentUserAsync();
                 var appUser = _userRepository.CurrentUser();
 
                 // process uploaded file
