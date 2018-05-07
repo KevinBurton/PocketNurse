@@ -39,6 +39,14 @@ namespace PocketNurse.Controllers
                 ModelState.AddModelError("cabinet", "NULL file passed to Upload action in Import controller");
                 return RedirectToAction("Index");
             }
+            var re = new Regex(@"\.xlsx$");
+            var match = re.Match(file.FileName);
+            if(!match.Success)
+            {
+                // Invalid file type (extension)
+                ModelState.AddModelError("cabinet", "Invalid file extension to Upload action in Import controller");
+                return RedirectToAction("Index");
+            }
 
             long size = file.Length;
 
@@ -52,6 +60,7 @@ namespace PocketNurse.Controllers
                 {
                     using (var stream = file.OpenReadStream())
                     {
+                        
                         pck.Load(stream);
                     }
 
