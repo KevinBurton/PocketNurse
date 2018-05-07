@@ -40,7 +40,7 @@ namespace PocketNurse.Controllers
                 ModelState.AddModelError("cabinet", "NULL file passed to Upload action in Import controller");
                 return RedirectToAction("Index");
             }
-            if (Path.GetExtension(file.FileName) != "xlsx")
+            if (Path.GetExtension(file.FileName) != ".xlsx")
             {
                 // Invalid file type (extension)
                 ModelState.AddModelError("cabinet", "Invalid file extension to Upload action in Import controller");
