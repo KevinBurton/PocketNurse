@@ -377,3 +377,36 @@ p {
         display: none;
     }
 }
+
+.navbar-inverse {
+    color: #6bb333;
+    background-color: #fff;
+}
+.navbar-inverse .navbar-nav > li > a {
+    color: #6bb333;
+    background-color: #fff;
+}
+.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+    color: #6bb333;
+    background-color: #fff;
+}
+.navbar-inverse .navbar-brand {
+    color: #6bb333;
+    background-color: #fff;
+}
+.navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
+    color: #6bb333;
+    background-color: #fff;
+}
+.navbar-inverse .btn-link {
+     color: #6bb333;
+     background-color: #fff;
+}
+.navbar-inverse .btn-link:hover, .navbar-inverse .btn-link:focus {
+     color: #6bb333;
+     background-color: #fff;
+}
+.carousel-indicators .active {
+    background-color: #6bb333;
+}
+
