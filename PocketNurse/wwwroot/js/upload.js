@@ -1,7 +1,7 @@
 ﻿var Upload = function () {
     return {//these methods will be exposed through the Upload object
         Initialize: function () {
-            var input = document.querySelector("input#sheet_upload[type='file']");
+            var input = document.querySelector("input#uploadFile[type='file']");
             var preview = document.querySelector('.preview');
 
             input.addEventListener('change', updateImageDisplay);

@@ -52,6 +52,6 @@ form#upload {
         color: white;
     }
 
-input#sheet_upload[type="file"] {
+input#uploadFile[type="file"] {
     opacity: 0;
 }
