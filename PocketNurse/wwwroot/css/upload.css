@@ -34,11 +34,13 @@ form#upload {
     }
 
     form#upload label, form#upload button {
-        background-color: #7F9CCB;
+        color: #6bb333;
+        background-color: #fff;
         padding: 5px 10px;
         border-radius: 5px;
         border: 1px ridge black;
-        font-size: 0.8rem;
+        font-size: 2rem;
+        font-weight: bold;
         height: auto;
     }
 
@@ -51,6 +53,11 @@ form#upload {
         background-color: #0D3F8F;
         color: white;
     }
+
+.preview {
+    font-size: 2rem;
+    font-weight: bold;
+}
 
 input#uploadFile[type="file"] {
     opacity: 0;
