@@ -9,13 +9,12 @@
     </div>
 }
 <!-- https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-2.1 -->
-<form id="upload" method="post" enctype="multipart/form-data" asp-action="Upload" asp-controller="Import">
+<form id="upload" method="post" class="well form-horizontal" enctype="multipart/form-data" asp-action="Upload" asp-controller="Import">
     <fieldset>
         <div class="form-group">
-            <div>
-                <label for="uploadFile">Choose images to upload (XLSX)</label>
-                <input type="file" id="uploadFile" name="file" accept=".xlsx" required>
-            </div>
+            <label for="uploadFile">Choose images to upload (XLSX)</label>
+            <!-- https://stackoverflow.com/questions/4328947/limit-file-format-when-using-input-type-file -->
+            <input type="file" id="uploadFile" name="file" accept=".xlsx" required>
             <div class="preview">
                 <p>No files currently selected for upload</p>
             </div>
