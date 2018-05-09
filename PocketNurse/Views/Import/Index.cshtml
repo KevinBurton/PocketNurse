@@ -9,22 +9,17 @@
     </div>
 }
 <!-- https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-2.1 -->
-<form id="upload" method="post" class="well form-horizontal" enctype="multipart/form-data" asp-controller="Import" asp-action="Upload">
+<form id="upload" method="post" class="well form-horizontal" enctype="multipart/form-data" asp-action="Upload" asp-controller="Import">
     <fieldset>
-        <!-- Form Name -->
-        <legend>Import file</legend>
         <div class="form-group">
-            <label class="col-md-4 control-label">Upload file path</label>
-            <div class="col-md-6 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
-                    <!-- https://stackoverflow.com/questions/4328947/limit-file-format-when-using-input-type-file -->
-                    <input placeholder="Path to Excel Spreadsheet" class="form-control" type="file" accept=".xls,.xlsx" name="file" required />
-                </div>
+            <label for="uploadFile">Choose images to upload (XLSX)</label>
+            <!-- https://stackoverflow.com/questions/4328947/limit-file-format-when-using-input-type-file -->
+            <input type="file" id="uploadFile" name="file" accept=".xlsx" required>
+            <div class="preview">
+                <p>No files currently selected for upload</p>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-4 control-label"></label>
             <div class="col-md-10">
                 <button type="submit" class="btn btn-warning">Upload <span class="glyphicon glyphicon-upload"></span></button>
             </div>

@@ -56,9 +56,9 @@ namespace PocketNurseTest
             var response = _controller.Upload(_file.Object);
             Assert.IsInstanceOfType(response, typeof(IActionResult));
             Assert.IsInstanceOfType(response, typeof(ViewResult));
-            Assert.IsInstanceOfType(((ViewResult)response).Model, typeof(OmnicellCabinetViewModel));
-            var modelResponse = ((ViewResult)response).Model as OmnicellCabinetViewModel;
-            Debug.WriteLine($"Patients {modelResponse.Patients.Count} NotInFormulary {modelResponse.NotInFormulary.Count}");
+            Assert.IsInstanceOfType(((ViewResult)response).Model, typeof(TokenStringViewModel));
+            var modelResponse = ((ViewResult)response).Model as TokenStringViewModel;
+            Debug.WriteLine($"Patients {modelResponse.Patients.Count} MedicationOrders {modelResponse.MedicationOrders.Count}");
             Assert.IsTrue(modelResponse.Patients.Count == 2);
         }
         [TestMethod]
@@ -69,7 +69,7 @@ namespace PocketNurseTest
             var response = _controller.Upload(_file.Object);
             Assert.IsInstanceOfType(response, typeof(IActionResult));
             Assert.IsInstanceOfType(response, typeof(ViewResult));
-            Assert.IsInstanceOfType(((ViewResult)response).Model, typeof(OmnicellCabinetViewModel));
+            Assert.IsInstanceOfType(((ViewResult)response).Model, typeof(TokenStringViewModel));
             Assert.IsFalse(_controller.ModelState.IsValid);
             Assert.IsTrue(_controller.ModelState.Keys.Count() == 2);
             Assert.IsTrue(_controller.ModelState["patient"].Errors.Count == 1);

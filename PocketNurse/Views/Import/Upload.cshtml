@@ -1,6 +1,4 @@
-﻿@using System.Linq
-
-@model OmnicellCabinetViewModel
+﻿@model TokenStringViewModel
 
 @{
     ViewData["Title"] = "Cabinet View";
@@ -16,21 +14,13 @@
 
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h2 class="panel-title">Cabinet View</h2>
+            <h2 class="panel-title">Patients</h2>
         </div>
         <div class="panel-body">
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col"><center><b>Patient First Name</b></center></th>
-                        <th scope="col"><center><b>Patient Last Name</b></center></th>
-                        <th scope="col"><center><b>DOB</b></center></th>
-                        <th scope="col"><center><b>MRN</b></center></th>
-                        <th scope="col"><center><b>Patient ID</b></center></th>
-                        <th scope="col"><center><b>Allergies</b></center></th>
-                    </tr>
-                    <tr colspan="6">
-                        <th scope="col"></th>
+                        <th scope="col"><center><b>TokenString</b></center></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,105 +29,32 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => patient.Patient.First)<br />
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => patient.Patient.Last)<br />
-                            </td>
-                            <td>
-                                @patient.Patient.DOB.ToString("MM/dd")<br />
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => patient.Patient.MRN)<br />
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => patient.Patient.PatientId)<br />
-                            </td>
-                            <td>
-                                @string.Join(",", patient.Allergies.Select(a => a.AllergyName))<br />
+                                @Html.Raw(patient)<br />
                             </td>
                         </tr>
-                        <tr>
-                            <td colspan="6">
-                                <table class="table">
-                                    <tbody>
-                                        @{
-                                        foreach (var med in @patient.MedicationOrders)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => med.PocketNurseItemId)<br />
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => med.MedicationName)<br />
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => med.Dose)<br />
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => med.Frequency)<br />
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => med.Route)<br />
-                                                </td>
-                                            </tr>
-                                    }
-                                        }
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                }
+                    }
                     }
                 </tbody>
             </table>
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h2 class="panel-title">Not in formulary</h2>
+                <h2 class="panel-title">Medication Orders</h2>
             </div>
             <div class="panel-body">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col"><center><b>Generic Name</b></center></th>
-                            <th scope="col"><center><b>Alias</b></center></th>
-                            <th scope="col"><center><b>Strength</b></center></th>
-                            <th scope="col"><center><b>Unit</b></center></th>
-                            <th scope="col"><center><b>Volume</b></center></th>
-                            <th scope="col"><center><b>Unit</b></center></th>
-                            <th scope="col"><center><b>Total Container Volume</b></center></th>
-                            <th scope="col"><center><b>Route</b></center></th>
+                            <th scope="col"><center><b>Token String</b></center></th>
                         </tr>
                     </thead>
                     <tbody>
                         @{
-                        foreach (var med in @Model.NotInFormulary)
+                        foreach (var medOrder in @Model.MedicationOrders)
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => med.GenericName)<br />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => med.Alias)<br />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => med.Strength)<br />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => med.StrengthUnit)<br />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => med.Volume)<br />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => med.VolumeUnit)<br />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => med.TotalContainerVolume)<br />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => med.Route)<br />
+                                    @Html.Raw(medOrder)<br />
                                 </td>
                             </tr>
                         }
@@ -146,4 +63,30 @@
                 </table>
             </div>
         </div>
-   </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2 class="panel-title">Not In Formulary</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><center><b>Token String</b></center></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                        foreach (var item in @Model.NotInFormulary)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.Raw(item)<br />
+                                </td>
+                            </tr>
+                        }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

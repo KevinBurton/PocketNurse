@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using PocketNurse.Models;
@@ -9,9 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace PocketNurse.Controllers
 {
@@ -74,51 +71,26 @@ namespace PocketNurse.Controllers
                         ModelState.AddModelError("cabinet", $"Not enough worksheets -> {pck.Workbook.Worksheets.Count}");
                         return RedirectToAction("Index");
                     }
-                    OmnicellCabinetViewModel cabinetView = ReadSessionWorkSheet(pck.Workbook.Worksheets[0]);
-                    if(cabinetView == null)
+                    OmniSession session = ReadSessionWorkSheet(pck.Workbook.Worksheets[0]);
+                    if(session == null)
                     {
                         return RedirectToAction("Index");
                     }
+                    var viewModel = new TokenStringViewModel(session);
 
-                    cabinetView.Patients.AddRange(ReadPatientWorkSheet(pck.Workbook.Worksheets[1]));
+                    var patientList = ReadPatientWorkSheet(viewModel, pck.Workbook.Worksheets[1]);
 
-                    var medicationOrderRawList = ReadMedicationOrderWorkSheet(pck.Workbook.Worksheets[2]);
+                    var medicationOrderList = ReadMedicationOrderWorkSheet(viewModel, pck.Workbook.Worksheets[2]);
+ 
+                    var notInFormularyList = ReadNotInFormularyWorkSheet(viewModel, pck.Workbook.Worksheets[3]);
 
-                    foreach(var medicationOrderRaw in medicationOrderRawList)
-                    {
-                        var patientDescriptionList = cabinetView.Patients.Where(pd => medicationOrderRaw.PatientIdList.Contains(pd.Patient.PatientId)).ToList();
-                        if(patientDescriptionList.Count != medicationOrderRaw.PatientIdList.Count)
-                        {
-                            var patientDiffList = medicationOrderRaw.PatientIdList.Except<string>(patientDescriptionList.Select(pd => pd.Patient.PatientId));
-                            // Patients not found
-                            ModelState.AddModelError("medication-order", $"No patients found for the medication order for '{medicationOrderRaw.MedicationName}' for patients '{string.Join(",", patientDiffList)}'");
-                        }
-                        foreach (var patientDescription in patientDescriptionList)
-                        {
-                            if(patientDescription != null)
-                            {
-                                patientDescription.MedicationOrders.Add(new MedicationOrder()
-                                {
-                                    PocketNurseItemId = medicationOrderRaw.PocketNurseItemId,
-                                    MedicationName = medicationOrderRaw.MedicationName,
-                                    Dose = medicationOrderRaw.Dose,
-                                    Frequency = medicationOrderRaw.Frequency,
-                                    Route = medicationOrderRaw.Route,
-                                    Patient = patientDescription.Patient
-                                });
-                            }
-                        }
-                    }
-
-                    cabinetView.NotInFormulary.AddRange(ReadNotInFormularyWorkSheet(pck.Workbook.Worksheets[3]));
-
-                    return View(cabinetView);
+                    return View(viewModel);
                 }
             }
             return NotFound();
         }
         #region Helpers
-        private OmnicellCabinetViewModel ReadSessionWorkSheet(ExcelWorksheet wk)
+        private OmniSession ReadSessionWorkSheet(ExcelWorksheet wk)
         {
             if (wk.Dimension.Rows <= 1)
             {
@@ -133,10 +105,10 @@ namespace PocketNurse.Controllers
                 return null;
             }
             if (wk.Name != "Session" ||
-                ((string)wk.Cells[1, 1].Value).Trim() != "Session" ||
-                ((string)wk.Cells[1, 2].Value).Trim() != "Date" ||
-                ((string)wk.Cells[1, 3].Value).Trim() != "State" ||
-                ((string)wk.Cells[1, 4].Value).Trim() != "Area")
+                ((string)wk.Cells[1, 1].Value).Trim() != "From" ||
+                ((string)wk.Cells[1, 2].Value).Trim() != "To" ||
+                ((string)wk.Cells[1, 3].Value).Trim() != "Site ID" ||
+                ((string)wk.Cells[1, 4].Value).Trim() != "Omni ID")
             {
                 // Not enough columns
                 ModelState.AddModelError("session", "This doesn't appear to be a session worksheet");
@@ -152,40 +124,27 @@ namespace PocketNurse.Controllers
                 ModelState.AddModelError("session", "Session worksheet has invalid content");
                 return null;
             }
-            var cabinetSessionId = Convert.ToString(wk.Cells[2, 1].Value);
-            var dateNum = 0.0;
-            if (wk.Cells[2, 2].Value is double)
-            {
-                dateNum = (double)wk.Cells[2, 2].Value;
-            }
-            else
-            {
-                dateNum = double.Parse(Convert.ToString(wk.Cells[2, 2].Value));
-            }
-            var cabinetSessionDate = DateTime.FromOADate(dateNum);
-            var cabinetState = Convert.ToString(wk.Cells[2, 3].Value);
-            var cabinetArea = Convert.ToString(wk.Cells[2, 4].Value);
-            var cabinet = new Cabinet() { State = cabinetState, Area = cabinetArea };
-            var cabinetSession = new CabinetSession() { CabinetSessionId = cabinetSessionId, Cabinet = cabinet, TimeStamp = cabinetSessionDate };
-
-            return new OmnicellCabinetViewModel(cabinetSession);
+            var cabinetFrom = Convert.ToString(wk.Cells[2, 1].Value);
+            var cabinetTo = Convert.ToString(wk.Cells[2, 2].Value);
+            var cabinetSiteId = Convert.ToString(wk.Cells[2, 3].Value);
+            var cabinetOmniId = Convert.ToString(wk.Cells[2, 4].Value);
+            return new OmniSession() { From = cabinetFrom, To = cabinetTo, SiteId = cabinetSiteId, OmniId = cabinetOmniId };
         }
 
-        private List<PatientDescription> ReadPatientWorkSheet(ExcelWorksheet wk)
+        private List<string> ReadPatientWorkSheet(TokenStringViewModel viewModel, ExcelWorksheet wk)
         {
-            var retval = new List<PatientDescription>();
             // Not enough rows to include header and data for patient
             if (wk.Dimension.Rows <= 1)
             {
                 // Not enough rows
                 ModelState.AddModelError("patient", $"Patient worksheet doesn't have enough rows {wk.Dimension.Rows}");
-                return retval;
+                return new List<string>();
             }
             if (wk.Dimension.Columns < 6)
             {
                 // Not enough columns
                 ModelState.AddModelError("patient", $"Patient worksheet doesn't have enough columns {wk.Dimension.Columns}");
-                return retval;
+                return new List<string>();
             }
             if(wk.Name != "Patient Information" ||
                ((string)wk.Cells[1, 1].Value).Trim() != "Patient First Name" ||
@@ -197,7 +156,7 @@ namespace PocketNurse.Controllers
             {
                 // Identification
                 ModelState.AddModelError("patient", "This doesn't appear to be a patient worksheet");
-                return retval;
+                return new List<string>();
             }
             // Process data for this sheet
             // Skip the headers
@@ -209,18 +168,17 @@ namespace PocketNurse.Controllers
                 if (wk.Cells[i, 1].Value == null ||
                     wk.Cells[i, 2].Value == null) continue;
 
-                var patientDescription = new PatientDescription()
+                var patient = new Patient
                 {
-                    Patient = new Patient()
+                    First = (string)wk.Cells[i, 1].Value,
+                    Last = (string)wk.Cells[i, 2].Value
                 };
-                patientDescription.Patient.First = (string)wk.Cells[i, 1].Value;
-                patientDescription.Patient.Last = (string)wk.Cells[i, 2].Value;
-                patientDescription.Patient.FullName = patientDescription.Patient.First + " " + patientDescription.Patient.Last;
+                patient.FullName = patient.First + " " + patient.Last;
                 if (wk.Cells[i, 3].Value != null)
                 {
                     if (wk.Cells[i, 3].Value.GetType() == typeof(DateTime))
                     {
-                        patientDescription.Patient.DOB = (DateTime)wk.Cells[i, 3].Value;
+                        patient.DOB = (DateTime)wk.Cells[i, 3].Value;
                     }
                     else if (wk.Cells[i, 3].Value.GetType() == typeof(string))
                     {
@@ -228,7 +186,7 @@ namespace PocketNurse.Controllers
                         var m = re.Match((string)wk.Cells[i, 3].Value);
                         if (m.Success)
                         {
-                            patientDescription.Patient.DOB = new DateTime(1, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
+                            patient.DOB = new DateTime(1, int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
                         }
                         else
                         {
@@ -242,28 +200,20 @@ namespace PocketNurse.Controllers
                         ModelState.AddModelError("patient", $"Patient DOB is not a string and not DateTime {wk.Cells[i, 3].Value.GetType()}");
                     }
                 }
-                patientDescription.Patient.MRN = Convert.ToString(wk.Cells[i, 4].Value);
-                patientDescription.Patient.PatientId = (string)wk.Cells[i, 5].Value;
-                if (patientDescription.Patient.PatientId == null)
+                patient.MRN = Convert.ToString(wk.Cells[i, 4].Value);
+                patient.PatientId = (string)wk.Cells[i, 5].Value;
+                if (patient.PatientId == null)
                 {
-                    patientDescription.Patient.PatientId = patientDescription.Patient.MRN;
+                    patient.PatientId = patient.MRN;
                 }
-                var allergiesString = (string)wk.Cells[i, 6].Value;
-                if (allergiesString != null)
-                {
-                    foreach (var allergy in allergiesString.Split(','))
-                    {
-                        patientDescription.Allergies.Add(new Allergy() { AllergyName = allergy });
-                    }
-                }
-                retval.Add(patientDescription);
+                var allergies = (string)wk.Cells[i, 6].Value;
+                viewModel.AddPatient(patient, allergies);
             }
-            return retval;
+            return viewModel.Patients;
         }
 
-        private List<MedicationOrderRaw> ReadMedicationOrderWorkSheet(ExcelWorksheet wk)
+        private List<string> ReadMedicationOrderWorkSheet(TokenStringViewModel viewModel, ExcelWorksheet wk)
         {
-            var retval = new List<MedicationOrderRaw>();
             if (wk.Name != "Med Order Information" ||
                 ((string)wk.Cells[1, 1].Value).Trim() != "Medication ID # (Pocket Nurse item ID)" ||
                 ((string)wk.Cells[1, 2].Value).Trim() != "Medication Name" ||
@@ -274,7 +224,7 @@ namespace PocketNurse.Controllers
             {
                 // Identification
                 ModelState.AddModelError("medication-order", "This doesn't appear to be a medication-order worksheet");
-                return retval;
+                return new List<string>();
             }
             if (wk.Dimension.Rows <= 1)
             {
@@ -305,13 +255,13 @@ namespace PocketNurse.Controllers
                     medicationOrder.Dose = Convert.ToString(wk.Cells[i, 3].Value);
                     medicationOrder.Frequency = Convert.ToString(wk.Cells[i, 4].Value);
                     medicationOrder.Route = Convert.ToString(wk.Cells[i, 5].Value);
-                    retval.Add(medicationOrder);
+                    viewModel.AddMedicationOrder(medicationOrder);
                 }
             }
-            return retval;
+            return viewModel.MedicationOrders;
         }
 
-        private List<NotInFormulary> ReadNotInFormularyWorkSheet(ExcelWorksheet wk)
+        private List<string> ReadNotInFormularyWorkSheet(TokenStringViewModel viewModel, ExcelWorksheet wk)
         {
             var retval = new List<NotInFormulary>();
             if (wk.Dimension.Rows <= 1)
@@ -345,7 +295,7 @@ namespace PocketNurse.Controllers
                          i <= wk.Dimension.End.Row;
                          i++)
                 {
-                    retval.Add(new NotInFormulary()
+                    viewModel.AddNotInFormulary(new NotInFormulary()
                     {
                         _id = -1,
                         GenericName = (string)wk.Cells[i, 1].Value,
@@ -359,7 +309,7 @@ namespace PocketNurse.Controllers
                     });
                 }
             }
-            return retval;
+            return viewModel.NotInFormulary;
         }
         #endregion
     }

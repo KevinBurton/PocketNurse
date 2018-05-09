@@ -1,7 +1,7 @@
 ﻿var Upload = function () {
     return {//these methods will be exposed through the Upload object
         Initialize: function () {
-            var input = document.querySelector("input#sheet_upload[type='file']");
+            var input = document.querySelector("input#uploadFile[type='file']");
             var preview = document.querySelector('.preview');
 
             input.addEventListener('change', updateImageDisplay);
@@ -25,13 +25,10 @@
                     preview.appendChild(list);
                     for (var i = 0; i < curFiles.length; i++) {
                         var listItem = document.createElement('li');
-                        var para = document.createElement('p');
                         if (validFileType(curFiles[i])) {
-                            para.textContent = 'File name ' + curFiles[i].name + ', file size ' + returnFileSize(curFiles[i].size) + '.';
-                            listItem.appendChild(para);
+                            listItem.textContent = 'File name ' + curFiles[i].name + ', file size ' + returnFileSize(curFiles[i].size) + '.';
                         } else {
-                            para.textContent = 'File name ' + curFiles[i].name + ': Not a valid file type. Update your selection.';
-                            listItem.appendChild(para);
+                            listItem.textContent = 'File name ' + curFiles[i].name + ': Not a valid file type. Update your selection.';
                         }
 
                         list.appendChild(listItem);
