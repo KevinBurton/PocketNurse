@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace PocketNurse.Models
 {
@@ -21,7 +22,7 @@ namespace PocketNurse.Models
         }
         public void AddPatient(Patient patient, string allergies)
         {
-            Patients.Add($"{_session.From,10}{_session.To,10}{"PA",16}\\site:{_session.SiteId}\\pid:{patient.PatientId}\\pna:{patient.FullName}\\dob:{DateTime.Now.Year:0000}{patient.DOB.Month:00}{patient.DOB.Day:00}00000000\\alrgy:{allergies}\\mrn:{patient.MRN}");
+            Patients.Add($"{_session.From,10}{_session.To,10}{"PA",16}\\site:{_session.SiteId}\\pid:{patient.PatientId}\\pna:{patient.FullName}\\dob:0000{patient.DOB.Month:00}{patient.DOB.Day:00}00000000\\alrgy:{allergies}\\mrn:{patient.MRN}");
         }
         public void AddMedicationOrder(MedicationOrderRaw medicationOrder)
         {
@@ -34,7 +35,12 @@ namespace PocketNurse.Models
         {
             NotInFormulary.Add($"\\osi:{_session.OmniId}\\item:{item.GenericName}\\ina:{item.Alias}\\dssa:{item.Strength}\\dssu:{item.StrengthUnit}\\dsva:{item.TotalContainerVolume}\\dsa:{item.Volume}\\dsu:{item.VolumeUnit}\\dsf:{item.Route}");
         }
-
+        public void WriteToFiles()
+        {
+            File.WriteAllLines(@"Patients.txt", Patients);
+            File.WriteAllLines(@"MedicationOrders.txt", MedicationOrders);
+            File.WriteAllLines(@"Items.txt", NotInFormulary);
+        }
         public List<string> Patients { get; set; }
         public List<string> MedicationOrders { get; set; }
         public List<string> NotInFormulary { get; set; }

@@ -84,6 +84,8 @@ namespace PocketNurse.Controllers
  
                     var notInFormularyList = ReadNotInFormularyWorkSheet(viewModel, pck.Workbook.Worksheets[3]);
 
+                    viewModel.WriteToFiles();
+
                     return View(viewModel);
                 }
             }

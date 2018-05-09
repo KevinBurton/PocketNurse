@@ -3,3 +3,6 @@
 **/.git/
 **/.vs/
 **/PublishProfiles
+Items.txt
+MedicationOrders.txt
+Patients.txt
