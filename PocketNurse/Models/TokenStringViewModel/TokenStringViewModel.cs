@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PocketNurse.Models
 {
@@ -20,7 +21,7 @@ namespace PocketNurse.Models
         }
         public void AddPatient(Patient patient, string allergies)
         {
-            Patients.Add($"{_session.From,10}{_session.To,10}{"PA",16}\\site:{_session.SiteId}\\pid:{patient.PatientId}\\pna:{patient.FullName}\\dob:{patient.DOB.ToString("MM/dd")}\\alrgy:{allergies}\\mrn:{patient.MRN}");
+            Patients.Add($"{_session.From,10}{_session.To,10}{"PA",16}\\site:{_session.SiteId}\\pid:{patient.PatientId}\\pna:{patient.FullName}\\dob:{DateTime.Now.Year:0000}{patient.DOB.Month:00}{patient.DOB.Day:00}00000000\\alrgy:{allergies}\\mrn:{patient.MRN}");
         }
         public void AddMedicationOrder(MedicationOrderRaw medicationOrder)
         {
