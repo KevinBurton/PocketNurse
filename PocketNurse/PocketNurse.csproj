@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\CabinetViewModel\" />
     <Folder Include="Models\UploadViewModel\" />
   </ItemGroup>
 </Project>
