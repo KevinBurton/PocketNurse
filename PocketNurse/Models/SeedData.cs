@@ -16,26 +16,37 @@ namespace PocketNurse.Models
                 {
                     return;   // DB has been seeded
                 }
-                context.Patient.AddRange(
-                     new Patient
-                     {
-                         PatientId = "1",
-                         MRN = "1",
-                         First = "Luke",
-                         Last = "Skywalker",
-                         FullName = "Luke Skywalker",
-                         // 19 BBY
-                         DOB = DateTime.Parse("4019-1-1")
-                     },
+                var luke =
+                      new Patient
+                      {
+                          PatientId = "1",
+                          MRN = "1",
+                          First = "Luke",
+                          Last = "Skywalker",
+                          FullName = "Luke Skywalker",
+                          // 19 BBY
+                          DOB = DateTime.Parse("4019-1-1"),
+                          Cabinet = new Cabinet()
+                          {
+                              State = "Tatooine",
+                              Area = "Farm"
+                          }
+                      };
+                context.Patient.Add(luke);
+                context.SaveChanges();
+
+                var leia =
                      new Patient
                      {
                          PatientId = "2",
+                         CabinetId = luke.Cabinet.CabinetId,
                          MRN = "2",
                          First = "Leia",
                          Last = "Organa",
                          FullName = "Leia Organa",
                          DOB = DateTime.Parse("4019-1-1")
-                     });
+                     };
+                context.Patient.Add(leia);
                 context.SaveChanges();
             }
         }

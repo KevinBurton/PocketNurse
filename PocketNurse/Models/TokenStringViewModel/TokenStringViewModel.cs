@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
@@ -37,9 +37,24 @@ namespace PocketNurse.Models
         }
         public void WriteToFiles()
         {
-            File.WriteAllLines(@"Patients.txt", Patients);
-            File.WriteAllLines(@"MedicationOrders.txt", MedicationOrders);
-            File.WriteAllLines(@"Items.txt", NotInFormulary);
+            if(Patients != null && Patients.Any())
+                File.WriteAllLines(@"Patients.txt", Patients);
+            else
+            {
+                if (File.Exists(@"Patients.txt")) File.Delete(@"Patients.txt");
+            }
+            if (MedicationOrders != null && MedicationOrders.Any())
+                File.WriteAllLines(@"MedicationOrders.txt", MedicationOrders);
+            else
+            {
+                if (File.Exists(@"MedicationOrders.txt")) File.Delete(@"MedicationOrders.txt");
+            }
+            if (NotInFormulary != null && NotInFormulary.Any())
+                File.WriteAllLines(@"Items.txt", NotInFormulary);
+            else
+            {
+                if (File.Exists(@"Items.txt")) File.Delete(@"Items.txt");
+            }
         }
         public List<string> Patients { get; set; }
         public List<string> MedicationOrders { get; set; }
